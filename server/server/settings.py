@@ -41,10 +41,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "comm",
     "rest_framework",
-    "django_extensions"
+    "django_extensions",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -52,6 +54,10 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
 ]
 
 ROOT_URLCONF = "server.urls"
@@ -133,8 +139,6 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# DEFAULT_FILE_STORAGE = "storages.backends.s3.S3Storage"
-# STATICFILES_STORAGE = "storages.backends.s3.S3Storage"
 
 STORAGES = {
     #media file (image) management
@@ -147,11 +151,6 @@ STORAGES = {
         "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
     }
 }
-
-# STORAGES = {
-#     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-#     "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
-# }
 
 
 AWS_S3_ACCESS_KEY_ID=env('AWS_ACCESS_KEY')
