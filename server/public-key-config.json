@@ -1,0 +1,5 @@
+{
+  "CallerReference": "django-comm-cloudfront-publickey",
+  "Name": "django-comm-publickey",
+  "EncodedKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq/uqWkjHbKiHpLHZbAsT\n5r2F42YEfQTQFJG3epktLwZ1YEO3OhZf4TXh5N1GjLxuG/DwTbd28eqXCfH8i3rS\niWsbCO4KuHu/nXYOqz0qfhzJb0cm9asFnmfvPmuD/lEL53dbtPw2jBFhsbh2FE2w\nODo2e7XXGBPDp+WbSTVZKpOg6efx7mb+5Hf5xQSE3VFLs+ccA3LJB24MZyACahgT\nlL8Wkw7BLP6qjyk2Y0t4m5KceM5yPPjYRTjMFOheVCuy2Hl3UM2t94Lc3ZfjV1Ua\nSN+GnZayI1NtlZQia7l35nl8FJZBRRcXAGAqy8dHy0cw7iBj+zWgJwehNTPmeMl+\nwQIDAQAB\n-----END PUBLIC KEY-----"
+}
