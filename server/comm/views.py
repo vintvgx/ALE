@@ -4,8 +4,8 @@ from django.shortcuts import render
 # views.py
 
 from rest_framework import viewsets
-from .models import User, Tag, BlogPost, Comment, Like, Follow
-from .serializers import UserSerializer, TagSerializer, BlogPostSerializer, CommentSerializer, LikeSerializer, FollowSerializer
+from .models import User, Tag, BlogPost, Comment, Like, Follow, Topic
+from .serializers import UserSerializer, TagSerializer, TopicSerializer, BlogPostSerializer, CommentSerializer, LikeSerializer, FollowSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -14,6 +14,10 @@ class UserViewSet(viewsets.ModelViewSet):
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    
+class TopicViewSet(viewsets.ModelViewSet):
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
 
 class BlogPostViewSet(viewsets.ModelViewSet):
     queryset = BlogPost.objects.all()

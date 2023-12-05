@@ -7,17 +7,24 @@ import { FaMessage } from "react-icons/fa6";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
 
-const SidebarView = () => {
+interface SidebarViewProps {
+  hideSidebar?: boolean;
+}
+
+const SidebarView: React.FC<SidebarViewProps> = ({ hideSidebar = false }) => {
   const [isSidebarMinimized, setSidebarMinimized] = useState(false);
 
   const toggleSidebar = () => {
     setSidebarMinimized(!isSidebarMinimized);
   };
 
+  if (hideSidebar) {
+    return null; // Render nothing if hideSidebar is true
+  }
+
   return (
     <Sidebar
       style={{
-        // backgroundColor: "lightgray",
         height: "100vh",
         position: "sticky",
         top: "0",

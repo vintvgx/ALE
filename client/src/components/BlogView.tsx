@@ -7,12 +7,12 @@ const BlogView: React.FC<BlogPost> = ({
   content,
   cover,
   created_at,
-  user,
+  author,
 }) => {
   //TODO create redux toolkit loading state and trigger displaying content
   //TODO once request has been filled
   const isLoading =
-    !title || typeof cover !== "string" || !content || !created_at || !user;
+    !title || typeof cover !== "string" || !content || !created_at || !author;
 
   return (
     <div>

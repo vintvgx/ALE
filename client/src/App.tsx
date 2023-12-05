@@ -1,8 +1,5 @@
 import React from "react";
-import "./App.css";
-
-import Home from "./pages/Home/Home";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import FeedView from "./pages/Feed/FeedView";
 import LibraryView from "./pages/Library/LibraryView";
 import SettingsView from "./pages/Settings/SettingsView";
@@ -13,11 +10,13 @@ import SidebarView from "./components/SidebarView";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const App: React.FC = () => {
+  const hideSidebarOnCreatePost = window.location.pathname === "/create-post";
+
   return (
     <div className="App">
       <BrowserRouter>
-        <div className=" flex">
-          <SidebarView />
+        <div className="flex">
+          {!hideSidebarOnCreatePost && <SidebarView />}
           <Routes>
             <Route path="/" element={<FeedView />} />
             <Route path="/feed" element={<FeedView />} />

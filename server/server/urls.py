@@ -3,12 +3,13 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 
-from comm.views import UserViewSet, TagViewSet, BlogPostViewSet, CommentViewSet, LikeViewSet, FollowViewSet
+from comm.views import UserViewSet, TopicViewSet, TagViewSet, BlogPostViewSet, CommentViewSet, LikeViewSet, FollowViewSet
 
 router = routers.DefaultRouter()
 
 router.register(r'users', UserViewSet)
 router.register(r'tags', TagViewSet)
+router.register(r'topics', TopicViewSet)
 router.register(r'blogposts', BlogPostViewSet)
 router.register(r'comments', CommentViewSet)
 router.register(r'likes', LikeViewSet)
