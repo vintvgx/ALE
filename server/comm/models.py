@@ -16,21 +16,36 @@ class User(models.Model):
         return self.username
     
 class Tag(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, null=True, blank=True)
     # Other tag-related fields (e.g., description)
+
+    def __str__(self):
+        return self.name
+    
+class Topic(models.Model):
+    name = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)
-    content = models.TextField()  # Store content in a structured format (e.g., JSON)
+    content = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
-    tags = models.ManyToManyField(Tag)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='topics', default=1)
+    # tags = models.ManyToManyField(Tag)
 
     def __str__(self):
         return self.title
+
+    def get_cover_upload_path(instance, filename):
+        # Update the path based on user's uid and blog post title
+        return f'posts/{instance.author.uid}/{instance.title}/cover/{filename}'
+
+    # Set the upload_to argument to the custom function
+    cover = models.ImageField(upload_to=get_cover_upload_path, null=True)
+
     
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
