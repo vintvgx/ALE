@@ -20,5 +20,5 @@ export interface BlogPost {
   created_at: string; //TODO change in models.py created_at -> published
   author: User | undefined; //TODO change in models.py author -> user
   cover: File | string | null;
-  topic: number;
+  topic: Topic;
 }

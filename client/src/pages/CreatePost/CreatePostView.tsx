@@ -1,26 +1,22 @@
 // CreatePostView.tsx
-import React, { useCallback, useMemo, useState } from "react";
-import { createEditor, Descendant, Editor, Transforms, Element } from "slate";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
-  Slate,
-  Editable,
-  withReact,
-  DefaultElement,
-  ReactEditor,
-} from "slate-react";
+  BaseEditor,
+  createEditor,
+  Descendant,
+  Editor,
+  Transforms,
+} from "slate";
+import { Slate, Editable, withReact, ReactEditor } from "slate-react";
 import isHotkey from "is-hotkey";
-import {
-  CodeElement,
-  Leaf,
-  toggleMark,
-  Toolbar,
-} from "../../utils/Slate/Elements";
-// import {
-//   CustomEditor,
-//   CustomElement,
-//   CustomText,
-// } from "../../models/slateModel";
-import { withHistory } from "slate-history";
+import { toggleMark } from "../../utils/Slate/components/Toolbar";
+import { Toolbar } from "../../utils/Slate/components/Toolbar";
+import { Element } from "../../utils/Slate/components/Element";
+import { Leaf } from "../../utils/Slate/components/Leaf";
+import { HistoryEditor, withHistory } from "slate-history";
+import { Box } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { EditorProps } from "../../utils/Slate/model";
 
 const HOTKEYS: { [hotkey: string]: string } = {
   "mod+b": "bold",
@@ -29,27 +25,29 @@ const HOTKEYS: { [hotkey: string]: string } = {
   "mod+`": "code",
 };
 
+type CustomEditor = BaseEditor & ReactEditor & HistoryEditor;
+
 const CreatePostView = () => {
   const [title, setTitle] = useState("");
   const [focused, setFocused] = React.useState(false);
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  // const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const [editorContent, setEditorContent] = useState<Descendant[]>([]);
   const divRef = React.useRef<HTMLDivElement>(null);
   const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
-  const renderElement = useCallback((props: any) => {
-    switch (props.element.type) {
-      case "code":
-        return <CodeElement {...props} />;
-      default:
-        return <DefaultElement {...props} />;
-    }
-  }, []);
+  const renderElement = useCallback((props: any) => <Element {...props} />, []);
+  const editorRef = useRef<CustomEditor | null>(null);
 
-  const initialValue: Descendant[] = [
+  if (!editorRef.current) {
+    editorRef.current = withHistory(withReact(createEditor()));
+  }
+
+  const editor = editorRef.current;
+
+  const initialValue = [
     {
       type: "paragraph",
-      children: [{ text: "A line of text in a paragraph." }],
-    } as Element, // Explicitly cast to Element
+      children: [{ text: "Testing" }],
+    },
   ];
 
   const savedSelection = React.useRef(editor.selection);
@@ -89,9 +87,53 @@ const CreatePostView = () => {
     }
   };
 
-  const handleSubmit = () => {
-    console.log(editorContent);
-    // console.log(editor);
+  const handleSubmit = async () => {
+    try {
+      const formData = new FormData();
+
+      // Create the data object in the expected format
+      const postData = {
+        author: {
+          username: "johndoe0123",
+          email: "doe123@aol.com",
+          uid: "johnnydoe123",
+          bio: "I dont know who i am.",
+          avatar: null,
+        },
+        topic: {
+          name: "Tech",
+        },
+        title: title,
+        content: JSON.stringify(editorContent),
+        cover: null,
+      };
+
+      // Append the data as JSON
+      formData.append("data", JSON.stringify(postData));
+
+      console.log(postData);
+
+      console.log(JSON.stringify(postData));
+
+      const response = await fetch("http://127.0.0.1:8000/api/blogposts/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create blog post");
+      }
+
+      const createdPost = await response.json();
+      console.log("Created Blog Post:", createdPost);
+
+      // Optionally, you can navigate to the newly created post or perform other actions
+    } catch (error) {
+      console.error("Error creating blog post:", error);
+    }
   };
 
   return (
@@ -109,70 +151,28 @@ const CreatePostView = () => {
       <Slate
         editor={editor}
         initialValue={initialValue}
-        onChange={(value) => setEditorContent(value)}>
+        onChange={(value) => {
+          setEditorContent(value);
+        }}>
         <Toolbar />
-        <Editable
-          onFocus={onFocus}
-          onBlur={onBlur}
-          onKeyDown={onKeyDown}
-          renderElement={renderElement}
-          renderLeaf={renderLeaf}
-          placeholder="Enter some rich text…"
-          spellCheck
-          className="mt-6"
-          // style={{ minHeight: "150px", resize: "vertical", overflow: "auto" }}
-        />
-        <button onClick={handleSubmit}>PRESS</button>
-        {/* <Editable
-            className="mt-6 outline-none"
+        <Box>
+          <Editable
+            onFocus={onFocus}
+            onBlur={onBlur}
+            onKeyDown={onKeyDown}
             renderElement={renderElement}
             renderLeaf={renderLeaf}
-            // onKeyDown={(event) => {
-            //   if (event.key === "&") {
-            //     event.preventDefault();
-            //     editor.insertText("and");
-            //   }
-            //   if (event.key === "b") {
-            //     event.preventDefault();
-            //     Editor.addMark(editor, "bold", true);
-            //   }
-            //   // TODO resolve custom elements
-            //   // if (event.key === "`" && event.ctrlKey) {
-            //   //   event.preventDefault();
-            //   //   const [match] = Editor.nodes(editor, {
-            //   //     match: (n) => n.type === "code",
-            //   //   });
-            //   //   // Toggle the block type depending on whether there's already a match.
-            //   //   Transforms.setNodes(
-            //   //     editor,
-            //   //     { type: match ? "paragraph" : "code" },
-            //   //     {
-            //   //       match: (n) =>
-            //   //         Element.isElement(n) && Editor.isBlock(editor, n),
-            //   //     }
-            //   //   );
-            //   // }
-            // }}
-            onKeyDown={(event) => {
-              if (!event.ctrlKey) {
-                return;
-              }
-
-              switch (event.key) {
-                case "&": {
-                  event.preventDefault();
-                  editor.insertText("and");
-                  break;
-                }
-
-                case "`": {
-                  event.preventDefault();
-                  Editor.addMark(editor, "bold", true);
-                  break;
-                }
-              }
-            }}
-          /> */}
+            placeholder="Enter some rich text…"
+            spellCheck
+            className="mt-6 outline-none w-full "
+            // style={{ minHeight: "150px", resize: "vertical", overflow: "auto" }}
+          />
+        </Box>
+        <button
+          className="mt-10 bg-slate-500 text-rose-50 p-2 rounded-lg"
+          onClick={handleSubmit}>
+          PRESS
+        </button>
       </Slate>
     </div>
   );
