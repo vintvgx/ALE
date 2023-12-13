@@ -10,11 +10,13 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen auth-view bg-white">
-      <form onSubmit={handleSubmit} className="mt-4 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-2">Sign in to Urban.AI</h2>
+    <div className="flex flex-col items-center justify-center h-screen w-screen auth-view bg-white">
+      <form
+        onSubmit={handleSubmit}
+        className="mt-4 w-96 max-w-md text-center bg-white p-8 rounded-md shadow-md">
+        <h2 className="text-2xl font-bold mb-2">Sign in to COMM+</h2>
 
-        <div className="flex flex-col mt-4">
+        <div className="flex flex-col mt-4 justify-center items-center gap-3">
           <input
             type="email"
             placeholder="Email"
@@ -31,16 +33,16 @@ const Login = () => {
           />
           {/* {error && <p className="text-red-500 text-sm">{error}</p>} */}
           <button
-            className="bg-blue-500 text-white w-full px-3 py-2 rounded-md"
+            className="bg-black text-white w-full px-3 py-2 rounded-md"
             type="submit">
             Login
           </button>
         </div>
         {/* Navigate to Sign up page */}
-        <div className="toggle-text">
+        {/* <div className="toggle-text">
           {"Don't have an account? "}
           <span style={{ color: "blue" }}>Sign Up</span>
-        </div>
+        </div> */}
       </form>
     </div>
   );

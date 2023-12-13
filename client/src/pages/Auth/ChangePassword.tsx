@@ -12,13 +12,13 @@ const ChangePassword = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex flex-col items-center justify-center h-screen w-screen">
       <form
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-md shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4">Change Password</h2>
 
-        <div className="flex flex-col mt-4">
+        <div className="flex flex-col mt-4 gap-3">
           <input
             type="password"
             placeholder="Current Password"
@@ -42,7 +42,7 @@ const ChangePassword = () => {
           />
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <button
-            className="bg-blue-500 text-white w-full px-3 py-2 rounded-md"
+            className="bg-black text-white w-full px-3 py-2 rounded-md"
             type="submit">
             Change Password
           </button>

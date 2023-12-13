@@ -3,6 +3,7 @@ import { FiLogOut, FiMenu } from "react-icons/fi";
 import { CgFeed } from "react-icons/cg";
 import { IoBookmarksSharp } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
+import { MdOutlinePersonOutline } from "react-icons/md";
 import { FaMessage } from "react-icons/fa6";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import { Link } from "react-router-dom";
@@ -97,6 +98,57 @@ const SidebarView: React.FC<SidebarViewProps> = ({ hideSidebar = false }) => {
               <>
                 <IoSettingsOutline className="mr-2" />
                 <span>Settings</span>
+              </>
+            )}
+          </div>
+        </MenuItem>
+        <MenuItem component={<Link to="/sign-up" />}>
+          <div className="flex items-center justify-center">
+            {isSidebarMinimized ? (
+              <MdOutlinePersonOutline className="mr-2" />
+            ) : (
+              <>
+                <MdOutlinePersonOutline className="mr-2" />
+                <span>Sign Up</span>
+              </>
+            )}
+          </div>
+        </MenuItem>
+        <MenuItem component={<Link to="/login" />}>
+          <div className="flex items-center justify-center">
+            {isSidebarMinimized ? (
+              <MdOutlinePersonOutline className="mr-2" />
+            ) : (
+              <>
+                <MdOutlinePersonOutline className="mr-2" />
+                <span>Login</span>
+              </>
+            )}
+          </div>
+        </MenuItem>
+        <MenuItem component={<Link to="/change-password" />}>
+          <div className="flex items-center justify-center">
+            {isSidebarMinimized ? (
+              <MdOutlinePersonOutline className="mr-2" />
+            ) : (
+              <>
+                <MdOutlinePersonOutline className="mr-2" />
+                <span>Change Password</span>
+              </>
+            )}
+          </div>
+        </MenuItem>
+        <MenuItem
+          component={
+            <Link to="dj-rest-auth/registration/account-confirm-email/:key/" />
+          }>
+          <div className="flex items-center justify-center">
+            {isSidebarMinimized ? (
+              <MdOutlinePersonOutline className="mr-2" />
+            ) : (
+              <>
+                <MdOutlinePersonOutline className="mr-2" />
+                <span>Email Verification</span>
               </>
             )}
           </div>
