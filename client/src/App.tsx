@@ -8,6 +8,8 @@ import ProfileView from "./pages/Profile/ProfileView";
 import CreatePostView from "./pages/CreatePost/CreatePostView";
 import SidebarView from "./components/SidebarView";
 import "react-loading-skeleton/dist/skeleton.css";
+import EmailVerification from "./pages/Auth/EmailVerification";
+import ResetPasswordConfirm from "./pages/Auth/ResetPasswordConfirm";
 
 const App: React.FC = () => {
   const hideSidebarOnCreatePost = window.location.pathname === "/create-post";
@@ -25,6 +27,12 @@ const App: React.FC = () => {
             <Route path="/messenger" element={<MessengerView />} />
             <Route path="/profile" element={<ProfileView />} />
             <Route path="/create-post" element={<CreatePostView />} />
+            <Route
+              path="dj-rest-auth/registration/account-confirm-email/:key/"
+              Component={EmailVerification}></Route>
+            <Route
+              path="reset/password/confirm/:uid/:token"
+              Component={ResetPasswordConfirm}></Route>
           </Routes>
         </div>
       </BrowserRouter>

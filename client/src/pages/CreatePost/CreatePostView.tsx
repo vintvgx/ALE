@@ -1,53 +1,39 @@
 import React, { useState } from "react";
-import AddPostContent from "../../components/AddPostContent";
-import { BlogContent } from "../../models/blogPostModel";
+import Editor from "../../utils/Editor/Editor";
+import EditorTextParser from "../../utils/Editor/EditorTextParser";
+import { OutputData } from "@editorjs/editorjs";
+import { exampleData, placeholder } from "../../utils/Editor/ExampleData";
+import "./CreatePost.css";
+import Editorv2 from "../../utils/Editor/Editorv2";
 
 const CreatePostView = () => {
-  const [title, setTitle] = useState("");
-  const [contentItems, setContentItems] = useState<BlogContent[]>([]);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [data, setData] = useState<OutputData>(placeholder);
 
-  const handleAddPost = (newContentItem: BlogContent) => {
-    setContentItems((prevContentItems: BlogContent[]) => [
-      ...prevContentItems,
-      newContentItem,
-    ]);
-  };
-
-  const getTextSizeClass = (type: string) => {
-    switch (type) {
-      case "h1":
-        return "text-3xl font-medium";
-      case "h2":
-        return "text-2xl font-medium";
-      case "h3":
-        return "text-xl font-medium";
-      default:
-        return "text-basic font-normal";
+  function toggleEditMode() {
+    if (isEditMode) {
+      setIsEditMode(false);
+      console.log("Edit mode is now disabled");
+    } else {
+      setIsEditMode(true);
+      console.log("Edit mode is now enabled");
     }
-  };
+  }
 
   return (
-    <div className="m-14 mx-96">
-      <input
-        type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Title"
-        className="text-5xl font-semibold"
-        style={{ outline: "none" }}
-      />
+    <div className="m-14 mx-96 w-full">
+      <button id="toggle-edit-btn" onClick={toggleEditMode}>
+        Toggle Edit Mode
+      </button>
 
-      <div className="mt-10">
-        <ul>
-          {contentItems.map((item, index) => (
-            <li key={index} className={getTextSizeClass(item.type)}>
-              {item.value}
-            </li>
-          ))}
-        </ul>
+      <div className="">
+        {isEditMode ? (
+          <Editor data={data} setData={setData} />
+        ) : (
+          <EditorTextParser data={data} />
+        )}
       </div>
-
-      <AddPostContent onAddPost={handleAddPost} />
+      {/* <Editorv2 /> */}
     </div>
   );
 };

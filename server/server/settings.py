@@ -40,13 +40,54 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "comm",
-    "rest_framework",
-    "django_extensions",
+     # corsheader
     "corsheaders",
+	# rest-framework
+    'rest_framework',
+    'rest_framework.authtoken',
+	# dj-rest-auth
+	'dj_rest_auth.registration',
+    'dj_rest_auth',
+	# allauth
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+	# allauth social accounts
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    # local app
+    "users",
 ]
 
+# rest-framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    )
+}
+
+# simple jwt
+from datetime import timedelta
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30), #
+    "REFRESH_TOKEN_LIFETIME": timedelta(hours=2),
+}
+
+# rest auth
+REST_AUTH = {
+    'USE_JWT': True,
+    'JWT_AUTH_COOKIE': 'access',
+    'JWT_AUTH_REFRESH_COOKIE': 'refresh',
+    'JWT_AUTH_HTTPONLY': True,
+    'SESSION_LOGIN': False,
+    'OLD_PASSWORD_FIELD_ENABLED': True,
+}
+
 MIDDLEWARE = [
+    # cors header middleware
     "corsheaders.middleware.CorsMiddleware",
+    # all auth middleware
+    'allauth.account.middleware.AccountMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -60,6 +101,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:3001",
 ]
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = "server.urls"
 
@@ -166,3 +208,24 @@ AWS_QUERYSTRING_EXPIRE = 600
 #todo Resolve private key error / create RSA key with public key + private key access
 # AWS_CLOUDFRONT_KEY_ID=env.str("AWS_CLOUDFRONT_KEY_ID").strip()
 # AWS_CLOUDFRONT_KEY=env.str("AWS_CLOUDFRONT_KEY", multiline=True).encode('ascii').strip()
+
+
+# allauth
+SITE_ID = 1
+ACCOUNT_USER_MODEL_USERNAME_FIELD = "username"  # Set the username field for Allauth
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = True # using email as authenticaiton
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
+
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = env("EMAIL")
+EMAIL_HOST_PASSWORD = env("EMAIL_PASSWORD")
+
+# Custom user model
+AUTH_USER_MODEL = "users.CustomUserModel"

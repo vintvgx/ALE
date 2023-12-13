@@ -1,0 +1,36 @@
+#test.rest // testing api calls
+// install REST client (VS Code)
+
+POST http://127.0.0.1:8000/signup Content-Type: application/json
+
+{ "username": "adam", "password": "Pass1234!", "email": "adam@mail.com" }
+
+###
+
+POST http://localhost:8000/dj-rest-auth/login Content-Type: application/json
+
+{
+	"username": "root",
+	"password": "bandit2019"
+}
+
+###
+POST http://127.0.0.1:8000/api/users/ Content-Type: application/json
+
+{
+  "password": "your_password_here",
+  "is_superuser": false,
+  "email": "user@example.com",
+  "username": "example_user",
+  "first_name": "John",
+  "last_name": "Doe",
+  "avatar": null,
+  "is_active": true,
+  "is_staff": false,
+  "groups": [""],
+  "user_permissions": [""]
+}
+
+###
+
+GET http://127.0.0.1:8000/test_token Content-Type: application/json Authorization: token xxx

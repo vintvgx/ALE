@@ -11,9 +11,8 @@ interface Posts {
 
 const BlogList: React.FC<Posts> = ({ topics, blogs }) => {
   const [selectedTopic, setSelectedTopic] = useState(1);
-  console.log(selectedTopic);
 
-  const filteredBlogs = blogs.filter((blog) => blog.topic === selectedTopic);
+  const filteredBlogs = blogs.filter((blog) => blog.topic.id === selectedTopic);
 
   return (
     <div className="flex justify-center items-center mx-52">
