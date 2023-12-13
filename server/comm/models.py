@@ -1,19 +1,20 @@
 from django.db import models
 from storages.backends.s3boto3 import S3Boto3Storage
+from users.models import CustomUserModel as User
 
 class AvatarStorage(S3Boto3Storage):
     location = 'avatars'  # Specify the S3 bucket subdirectory
 
-class User(models.Model):
-    username = models.CharField(max_length=255)
-    email = models.EmailField(unique=True)
-    uid = models.CharField(max_length=100,  unique=True)
-    bio = models.CharField(max_length=1000)
-    avatar = models.ImageField(upload_to='avatars/', null=True)
-    # Other user-related fields (e.g., profile picture, bio)
+# class User(models.Model):
+#     username = models.CharField(max_length=255)
+#     email = models.EmailField(unique=True)
+#     uid = models.CharField(max_length=100,  unique=True)
+#     bio = models.CharField(max_length=1000)
+#     avatar = models.ImageField(upload_to='avatars/', null=True)
+#     # Other user-related fields (e.g., profile picture, bio)
 
-    def __str__(self):
-        return self.username
+#     def __str__(self):
+#         return self.username
     
 class Tag(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
