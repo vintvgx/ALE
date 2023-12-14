@@ -1,13 +1,25 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { Navigate } from "react-router-dom";
+import { AppDispatch, useAppSelector } from "../../redux/store";
+import { userLogin } from "../../redux/user/AuthReducer";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const dispatch: AppDispatch = useDispatch();
+
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { user, isAuthenticated } = useAppSelector((state) => state.user);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
     // Implement your login logic here
+    dispatch(userLogin({ username, password }));
   };
+
+  if (isAuthenticated) {
+    return <Navigate to="../feed" />;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center h-screen w-screen auth-view bg-white">
@@ -18,10 +30,10 @@ const Login = () => {
 
         <div className="flex flex-col mt-4 justify-center items-center gap-3">
           <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="username"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="w-full px-3 py-2 mb-2 border rounded-md"
           />
           <input
@@ -38,11 +50,6 @@ const Login = () => {
             Login
           </button>
         </div>
-        {/* Navigate to Sign up page */}
-        {/* <div className="toggle-text">
-          {"Don't have an account? "}
-          <span style={{ color: "blue" }}>Sign Up</span>
-        </div> */}
       </form>
     </div>
   );

@@ -3,23 +3,26 @@ import Navbar from "../../components/NavBar";
 import BlogList from "../../components/BlogList";
 import { AppDispatch, useAppSelector } from "../../redux/store";
 import { useDispatch } from "react-redux";
-import {
-  fetchBlogPosts,
-  fetchTopics,
-  getBlogPosts,
-} from "../../redux/posts/blogPostSlice";
 import PlusIcon from "../../components/AddPostBtn";
+import { getUser, verify } from "../../redux/user/AuthReducer";
 
 const FeedView = () => {
   const dispatch: AppDispatch = useDispatch();
-
-  const { topics, blogPosts, isLoading, isError } = useAppSelector(
-    ({ blogList }) => blogList
+  const { user, isAuthenticated, access, refresh, message } = useAppSelector(
+    (state) => state.user
   );
 
   useEffect(() => {
-    dispatch(fetchTopics());
-    dispatch(fetchBlogPosts());
+    console.log("message:", message);
+    console.log("refresh:", refresh);
+    console.log("access:", access);
+    console.log("isAuthenticated:", isAuthenticated);
+    console.log("user:", user);
+  });
+
+  useEffect(() => {
+    dispatch(verify());
+    dispatch(getUser());
   }, [dispatch]);
 
   // if (blogPosts.length !== 0) console.log(blogPosts);
@@ -33,7 +36,7 @@ const FeedView = () => {
         notifications={true}
         profile={true}
       />
-      <BlogList topics={topics} blogs={blogPosts} />
+      {/* <BlogList topics={topics} blogs={blogPosts} /> */}
       <PlusIcon />
     </div>
   );

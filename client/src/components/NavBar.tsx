@@ -1,5 +1,6 @@
 import React from "react";
 import { RiNotificationLine } from "react-icons/ri";
+import { useAppSelector } from "../redux/store";
 
 interface NavbarProps {
   title: string;
@@ -16,6 +17,8 @@ const Navbar: React.FC<NavbarProps> = ({
   notifications,
   searchPlaceholder,
 }) => {
+  const { user } = useAppSelector((state) => state.user);
+
   return (
     <nav className="flex items-center justify-between p-4 bg-white text-black ">
       {/* Title aligned to the flex-start */}
@@ -36,6 +39,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
       {/* Notification button and profile circle aligned to the flex-end */}
       <div className="flex items-center">
+        {user && <div className="mx-2">{user.username}</div>}
         {notifications && (
           <div className="mx-2">
             <RiNotificationLine size={24} />

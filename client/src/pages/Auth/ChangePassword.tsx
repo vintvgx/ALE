@@ -1,15 +1,42 @@
 import React, { useState } from "react";
+import { AppDispatch, useAppSelector } from "../../redux/store";
+import { useDispatch } from "react-redux";
+import { changePassword } from "../../redux/user/AuthReducer";
+import { ChangePasswordPayload } from "../../models/userModel";
+import { Navigate } from "react-router-dom";
 
 const ChangePassword = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const { isAuthenticated } = useAppSelector((state) => state.user);
+
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Implement your change password logic here
+
+    // Check if new password and confirm password match
+    if (newPassword !== confirmPassword) {
+      setError("New password and confirm password do not match");
+      return;
+    }
+
+    // Create the payload to be sent to the changePassword action
+    const payload: ChangePasswordPayload = {
+      newPassword1: newPassword,
+      newPassword2: confirmPassword,
+      oldPassword: currentPassword,
+    };
+
+    // Dispatch the changePassword action with the payload
+    dispatch(changePassword(payload));
   };
+
+  if (!isAuthenticated && !localStorage.getItem("access")) {
+    return <Navigate to="../login" />;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center h-screen w-screen">

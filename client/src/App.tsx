@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import FeedView from "./pages/Feed/FeedView";
 import LibraryView from "./pages/Library/LibraryView";
@@ -14,8 +14,18 @@ import SignUp from "./pages/Auth/SignUp";
 import Login from "./pages/Auth/Login";
 import ChangePassword from "./pages/Auth/ChangePassword";
 
+import { getUser, verify } from "./redux/user/AuthReducer";
+import { AppDispatch } from "./redux/store";
+import { useDispatch } from "react-redux";
+
 const App: React.FC = () => {
   const hideSidebarOnCreatePost = window.location.pathname === "/create-post";
+  const dispatch: AppDispatch = useDispatch();
+
+  // useEffect(() => {
+  //   dispatch(verify());
+  //   dispatch(getUser());
+  // }, [dispatch]);
 
   return (
     <div className="App">
