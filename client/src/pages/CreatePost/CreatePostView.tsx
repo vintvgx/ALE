@@ -5,10 +5,13 @@ import { OutputData } from "@editorjs/editorjs";
 import { exampleData, placeholder } from "../../utils/Editor/ExampleData";
 import "./CreatePost.css";
 import Editorv2 from "../../utils/Editor/Editorv2";
+import { useAppSelector } from "../../redux/store";
+import { Navigate } from "react-router-dom";
 
 const CreatePostView = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [data, setData] = useState<OutputData>(placeholder);
+  const { isAuthenticated } = useAppSelector((state) => state.user);
 
   function toggleEditMode() {
     if (isEditMode) {
@@ -20,20 +23,24 @@ const CreatePostView = () => {
     }
   }
 
+  if (!isAuthenticated) {
+    return <Navigate to="../login" />;
+  }
+
   return (
     <div className="m-14 mx-96 w-full">
       <button id="toggle-edit-btn" onClick={toggleEditMode}>
         Toggle Edit Mode
       </button>
 
-      <div className="">
+      {/* <div className="">
         {isEditMode ? (
           <Editor data={data} setData={setData} />
         ) : (
           <EditorTextParser data={data} />
         )}
-      </div>
-      {/* <Editorv2 /> */}
+      </div> */}
+      <Editor data={data} setData={setData} />
     </div>
   );
 };
