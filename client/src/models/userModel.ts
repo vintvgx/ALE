@@ -1,13 +1,5 @@
-export interface User {
-  id: number;
-  username: string;
-  email: string;
-  bio: string;
-  avatar: string | null;
-}
-
 export interface UserModel {
-  id: number; // Assuming your id field is of type AutoField or similar
+  pk: number; // Assuming your id field is of type AutoField or similar
   email: string;
   username: string;
   first_name: string;

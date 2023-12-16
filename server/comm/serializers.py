@@ -21,31 +21,32 @@ class TopicSerializer(serializers.ModelSerializer):
         fields = '__all__'
     
 class BlogPostSerializer(serializers.ModelSerializer):
-    author = UserSerializer()
     topic = TopicSerializer()
-     #author = UserSerializer(read_only=True)
-    #topic = TopicSerializer(read_only=True)
+    user = UserSerializer(read_only=True)  # Mark the author field as read-only
 
     class Meta:
         model = BlogPost
         fields = '__all__'
-    
+
+
     def create(self, validated_data):
         # Extract the nested data
-        author_data = validated_data.pop('author')
         topic_data = validated_data.pop('topic')
 
         # Create or get the related objects
-        author_instance, _ = User.objects.get_or_create(**author_data)
         topic_instance, _ = Topic.objects.get_or_create(**topic_data)
 
-        # Update the validated_data with the related instances
-        validated_data['author'] = author_instance
+        # Get the current user from the request
+        user = self.context['request'].user
+
+        # Update the validated_data with the related instances and user
+        # validated_data['author'] = user
         validated_data['topic'] = topic_instance
 
         # Create the BlogPost instance
         blog_post = BlogPost.objects.create(**validated_data)
         return blog_post
+
 
 
 class CommentSerializer(serializers.ModelSerializer):

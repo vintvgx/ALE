@@ -15,17 +15,28 @@ import Login from "./pages/Auth/Login";
 import ChangePassword from "./pages/Auth/ChangePassword";
 
 import { getUser, verify } from "./redux/user/AuthReducer";
-import { AppDispatch } from "./redux/store";
+import { AppDispatch, useAppSelector } from "./redux/store";
 import { useDispatch } from "react-redux";
 
 const App: React.FC = () => {
   const hideSidebarOnCreatePost = window.location.pathname === "/create-post";
   const dispatch: AppDispatch = useDispatch();
+  const { user, isAuthenticated, access, refresh, message } = useAppSelector(
+    (state) => state.user
+  );
 
-  // useEffect(() => {
-  //   dispatch(verify());
-  //   dispatch(getUser());
-  // }, [dispatch]);
+  useEffect(() => {
+    console.log("message:", message);
+    console.log("refresh:", refresh);
+    console.log("access:", access);
+    console.log("isAuthenticated:", isAuthenticated);
+    console.log("user:", user);
+  });
+
+  useEffect(() => {
+    dispatch(verify());
+    dispatch(getUser());
+  }, [dispatch]);
 
   return (
     <div className="App">

@@ -1,13 +1,13 @@
 import { Action, configureStore } from "@reduxjs/toolkit";
 import { useDispatch, TypedUseSelectorHook, useSelector } from "react-redux";
 import { ThunkAction } from "redux-thunk";
-import blogPostReducer from "../redux/posts/blogPostSlice";
+import blogPostReducer from "./posts/BlogPostReducer";
 import AuthReducer from "./user/AuthReducer";
 
 export const store = configureStore({
   reducer: {
     //TODO add reducers
-    blogList: blogPostReducer,
+    blogPost: blogPostReducer,
     user: AuthReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),

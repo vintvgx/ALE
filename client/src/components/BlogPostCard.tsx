@@ -7,7 +7,10 @@ interface BlogPostCardProps {
 }
 
 const BlogPostCard: React.FC<BlogPostCardProps> = ({ blog }) => {
-  const formattedDateMonthDay = formatDateToMonthDay(blog.created_at);
+  var formattedDateMonthDay = "";
+
+  if (blog.created_at)
+    formattedDateMonthDay = formatDateToMonthDay(blog.created_at);
 
   return (
     <div className="relative mb-6 p-6 text-left bg-white border-b-2 cursor-pointer">
@@ -30,11 +33,11 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ blog }) => {
         {/* Blog Details */}
         <div className="flex flex-col justify-between w-2/3">
           {/* User Avatar */}
-          {blog.author && (
+          {blog.user && (
             <div className="absolute top-2 right-2">
-              {blog.author.avatar && (
+              {blog.user.avatar && (
                 <img
-                  src={blog.author.avatar}
+                  src={blog.user.avatar}
                   alt="User Avatar"
                   className="w-8 h-8 object-cover rounded-full border-2 border-white"
                 />

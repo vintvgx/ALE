@@ -5,25 +5,34 @@ import { AppDispatch, useAppSelector } from "../../redux/store";
 import { useDispatch } from "react-redux";
 import PlusIcon from "../../components/AddPostBtn";
 import { getUser, verify } from "../../redux/user/AuthReducer";
+import { fetchBlogPosts, fetchTopics } from "../../redux/posts/BlogPostReducer";
 
 const FeedView = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { user, isAuthenticated, access, refresh, message } = useAppSelector(
-    (state) => state.user
-  );
+
+  const { topics, blogPosts } = useAppSelector((state) => state.blogPost);
 
   useEffect(() => {
-    console.log("message:", message);
-    console.log("refresh:", refresh);
-    console.log("access:", access);
-    console.log("isAuthenticated:", isAuthenticated);
-    console.log("user:", user);
-  });
+    const fetchData = async () => {
+      await dispatch(fetchTopics());
+      await dispatch(fetchBlogPosts());
+    };
 
-  useEffect(() => {
-    dispatch(verify());
-    dispatch(getUser());
-  }, [dispatch]);
+    if (topics.length === 0 && blogPosts.length === 0) {
+      fetchData();
+    }
+
+    console.log(
+      "🚀 ~ file: FeedView.tsx:13 ~ FeedView ~ blogPosts:",
+      blogPosts,
+      blogPosts.length
+    );
+    console.log(
+      "🚀 ~ file: FeedView.tsx:13 ~ FeedView ~ topics:",
+      topics,
+      topics.length
+    );
+  }, []); // Empty dependency array
 
   // if (blogPosts.length !== 0) console.log(blogPosts);
 
@@ -36,7 +45,7 @@ const FeedView = () => {
         notifications={true}
         profile={true}
       />
-      {/* <BlogList topics={topics} blogs={blogPosts} /> */}
+      <BlogList topics={topics} blogs={blogPosts} />
       <PlusIcon />
     </div>
   );

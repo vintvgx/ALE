@@ -5,6 +5,9 @@ import EditorJS, { OutputData, ToolSettings } from "@editorjs/editorjs";
 import { EDITOR_JS_TOOLS } from "./Tools";
 import { createReactEditorJS } from "react-editor-js";
 
+// Styles
+import "./Editor.css";
+
 interface EditorProps {
   data: OutputData;
   setData: React.Dispatch<React.SetStateAction<OutputData>>;
@@ -32,21 +35,21 @@ const Editor: FC<EditorProps> = ({ data, setData }) => {
     }
   }, [setData]);
 
-  const handleSubmit = () => {
-    console.log(JSON.stringify(data));
-    alert(data);
-  };
-
   return (
-    <div className="editor-container">
-      <h4 className="edit-mode-alert">! Edit Mode Enabled</h4>
+    <div
+      style={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+      }}>
       <ReactEditorJS
         onInitialize={handleInitialize}
         tools={EDITOR_JS_TOOLS}
         onChange={handleSave}
         defaultValue={data}
+        placeholder={"Tell your story..."}
       />
-      <button onClick={handleSubmit}>SUBMIT</button>
     </div>
   );
 };

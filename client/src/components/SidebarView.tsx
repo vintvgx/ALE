@@ -62,6 +62,7 @@ const SidebarView: React.FC<SidebarViewProps> = ({ hideSidebar = false }) => {
       backgroundColor={"#ED9D00"}
       transitionDuration={500}>
       <div
+        className="flex items-center  text-left justify-center"
         style={{
           textAlign: "center",
           padding: "20px",
@@ -70,7 +71,7 @@ const SidebarView: React.FC<SidebarViewProps> = ({ hideSidebar = false }) => {
           style={{
             width: isSidebarMinimized ? "60px" : "200px",
           }}>
-          COMM
+          {isSidebarMinimized ? <>n</> : <>nodium</>}
         </h3>
       </div>
       <Menu className="text-left">
