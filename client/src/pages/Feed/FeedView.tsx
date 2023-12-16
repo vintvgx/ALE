@@ -27,11 +27,6 @@ const FeedView = () => {
       blogPosts,
       blogPosts.length
     );
-    console.log(
-      "🚀 ~ file: FeedView.tsx:13 ~ FeedView ~ topics:",
-      topics,
-      topics.length
-    );
   }, [blogPosts, dispatch, topics]); // Empty dependency array
 
   // if (blogPosts.length !== 0) console.log(blogPosts);

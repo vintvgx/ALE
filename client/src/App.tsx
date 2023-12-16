@@ -17,6 +17,7 @@ import ChangePassword from "./pages/Auth/ChangePassword";
 import { getUser, verify } from "./redux/user/AuthReducer";
 import { AppDispatch, useAppSelector } from "./redux/store";
 import { useDispatch } from "react-redux";
+import BlogPostDetail from "./components/BlogPostDetail";
 
 const App: React.FC = () => {
   const hideSidebarOnCreatePost = window.location.pathname === "/create-post";
@@ -60,6 +61,7 @@ const App: React.FC = () => {
             <Route
               path="reset/password/confirm/:uid/:token"
               Component={ResetPasswordConfirm}></Route>
+            <Route path="/blog/:id" Component={BlogPostDetail} />
           </Routes>
         </div>
       </BrowserRouter>

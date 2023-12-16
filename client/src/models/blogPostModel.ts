@@ -15,6 +15,7 @@ export interface BlogContent {
 }
 
 export interface BlogPost {
+  id: number;
   user: UserModel | undefined; //TODO change in models.py author -> user
   topic: Topic;
   title: string;

@@ -21,6 +21,7 @@ const SidebarView: React.FC<SidebarViewProps> = ({ hideSidebar = false }) => {
   const location = useLocation();
   const isCreatePostView = location.pathname === "/create-post";
   const isLogin = location.pathname === "/login";
+  const isDisplayBlogPost = location.pathname === "/blog/:id";
 
   const dispatch: AppDispatch = useDispatch();
   const { isAuthenticated } = useAppSelector((state) => state.user);
@@ -36,7 +37,7 @@ const SidebarView: React.FC<SidebarViewProps> = ({ hideSidebar = false }) => {
     setSidebarMinimized(isCreatePostView);
   }, [isCreatePostView, isLogin]);
 
-  if (hideSidebar || isCreatePostView || isLogin) {
+  if (hideSidebar || isCreatePostView || isLogin || isDisplayBlogPost) {
     return null; // Render nothing if hideSidebar is true or on CreatePostView
   }
 

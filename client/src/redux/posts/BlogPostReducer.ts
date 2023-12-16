@@ -5,6 +5,7 @@ import { UserModel } from "../../models/userModel";
 
 interface Posts {
   blogPosts: BlogPost[];
+  detailPost: BlogPost | undefined;
   topics: Topic[];
   isLoading: boolean;
   isError: string | undefined;
@@ -12,6 +13,7 @@ interface Posts {
 
 const initialState: Posts = {
   blogPosts: [],
+  detailPost: undefined,
   topics: [],
   isLoading: false,
   isError: undefined,
@@ -53,6 +55,26 @@ const blogSlice = createSlice({
       state.isLoading = false;
       state.isError = action.payload;
     },
+    getBlogPostByIdStart: (state) => {
+      state.isLoading = true;
+      state.isError = undefined;
+    },
+
+    getBlogPostByIdSuccess: (state) => {
+      state.isLoading = false;
+      state.isError = undefined;
+    },
+
+    getBlogPostByIdFailure: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      state.isError = action.payload;
+    },
+
+    getBlogPostById: (state, action: PayloadAction<BlogPost>) => {
+      state.detailPost = action.payload; // Assuming you want to store the single post in the blogPosts array
+      state.isLoading = false;
+      state.isError = undefined;
+    },
   },
 });
 
@@ -64,6 +86,10 @@ export const {
   postBlogPostStart,
   postBlogPostSuccess,
   postBlogPostFailure,
+  getBlogPostByIdStart,
+  getBlogPostByIdSuccess,
+  getBlogPostByIdFailure,
+  getBlogPostById,
 } = blogSlice.actions;
 
 export default blogSlice.reducer;
@@ -122,3 +148,16 @@ export const postBlogPost =
       // Handle error as needed
     }
   };
+
+export const fetchBlogPostById = (postId: number) => async (dispatch: any) => {
+  try {
+    dispatch(getBlogPostByIdStart());
+    const res = await axios.get(
+      `http://127.0.0.1:8000/api/blogposts/${postId}/`
+    );
+    const blogPostData: BlogPost = res.data;
+    dispatch(getBlogPostById(blogPostData));
+  } catch (error) {
+    dispatch(getBlogPostByIdFailure("Error"));
+  }
+};
