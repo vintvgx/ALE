@@ -7,6 +7,7 @@ import { createReactEditorJS } from "react-editor-js";
 
 // Styles
 import "./Editor.css";
+import EditorDIV from "./Editorv2";
 
 interface EditorProps {
   data: OutputData;
@@ -41,15 +42,18 @@ const Editor: FC<EditorProps> = ({ data, setData }) => {
         width: "100%",
         display: "flex",
         flexDirection: "column",
+        justifyContent: "flex-start", // Align content to the left
+
         alignItems: "flex-start",
       }}>
-      <ReactEditorJS
+      {/* <ReactEditorJS
         onInitialize={handleInitialize}
         tools={EDITOR_JS_TOOLS}
         onChange={handleSave}
         defaultValue={data}
         placeholder={"Tell your story..."}
-      />
+      /> */}
+      <EditorDIV data={data} setData={setData} />
     </div>
   );
 };

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { BlogPost } from "../models/blogPostModel";
-import { fetchBlogPostById } from "../redux/posts/BlogPostReducer";
+import {
+  fetchBlogPostById,
+  resetDetailPost,
+} from "../redux/posts/BlogPostReducer";
 import { AppDispatch, useAppSelector } from "../redux/store";
 import { useDispatch } from "react-redux";
 import EditorTextParser from "../utils/Editor/EditorTextParser";
@@ -11,7 +14,6 @@ const BlogPostDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch: AppDispatch = useDispatch();
 
-  const [loading, setLoading] = useState(true);
   const [contentObject, setContentObject] = useState<OutputData | undefined>(
     undefined
   );
@@ -20,41 +22,63 @@ const BlogPostDetail: React.FC = () => {
   );
 
   useEffect(() => {
-    const fetchBlog = async () => {
-      try {
-        const postId = Number(id);
-        await dispatch(fetchBlogPostById(postId));
-      } catch (error) {
-        console.error("Error fetching blog post:", error);
-      } finally {
-        setLoading(false);
-      }
+    const fetchPostDetail = async () => {
+      const postId = Number(id);
+      await dispatch(fetchBlogPostById(postId));
     };
 
-    fetchBlog();
-
-    if (detailPost && detailPost.content) {
-      // Parse the JSON string and set the OutputData
-      setContentObject(JSON.parse(detailPost.content));
+    if (!detailPost) {
+      fetchPostDetail();
+      console.log("🚀 ~ file: BlogPostDetail.tsx:19 ~ detailPost:", detailPost);
     }
-  }, [id]);
+  }, [dispatch, id, detailPost]);
 
-  if (loading) {
+  useEffect(() => {
+    return () => {
+      // Code to run when the component is unmounted
+      console.log("Component is unmounted. Cleanup code here.");
+      dispatch(resetDetailPost());
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   if (detailPost && detailPost.content) {
+  //     // Parse the JSON string and set the OutputData
+  //     setContentObject(JSON.parse(detailPost.content));
+  //     console.log(
+  //       "🚀 ~ file: BlogPostDetail.tsx:18 ~ contentObject:",
+  //       contentObject
+  //     );
+  //   }
+  // }, [contentObject, detailPost]);
+
+  if (isLoading) {
     // Optional: You can add a loading spinner or message while the data is being fetched
     return <div>Loading...</div>;
   }
 
-  if (!detailPost) {
+  if (detailPost === undefined) {
     // Handle the case where the blog post is not found
     return <div>Blog post not found</div>;
   }
 
   return (
-    <div className="flex flex-col items-center mt-10 h-screen  auth-view bg-white">
+    <div className="flex flex-col items-center mt-10 h-screen auth-view bg-white">
       {/* Render the detailed view of the blog post */}
       <h1>{detailPost.title}</h1>
-      <EditorTextParser data={contentObject} />
+      <div id="editor-container" style={{ width: "100%" }} />
       {/* Add other details you want to display */}
+
+      {/* Initialize the EditorJS instance in read-only mode */}
+      <script>
+        {`
+          const editor = new EditorJS({
+            holder: "editor-container",
+            readOnly: true,
+            data: ${JSON.stringify(detailPost.content)}
+          });
+        `}
+      </script>
     </div>
   );
 };

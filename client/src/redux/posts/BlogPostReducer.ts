@@ -75,6 +75,9 @@ const blogSlice = createSlice({
       state.isLoading = false;
       state.isError = undefined;
     },
+    resetDetailPost: (state) => {
+      state.detailPost = undefined;
+    },
   },
 });
 
@@ -90,6 +93,7 @@ export const {
   getBlogPostByIdSuccess,
   getBlogPostByIdFailure,
   getBlogPostById,
+  resetDetailPost,
 } = blogSlice.actions;
 
 export default blogSlice.reducer;
@@ -156,6 +160,7 @@ export const fetchBlogPostById = (postId: number) => async (dispatch: any) => {
       `http://127.0.0.1:8000/api/blogposts/${postId}/`
     );
     const blogPostData: BlogPost = res.data;
+    console.log(blogPostData);
     dispatch(getBlogPostById(blogPostData));
   } catch (error) {
     dispatch(getBlogPostByIdFailure("Error"));

@@ -32,7 +32,13 @@ export const EDITOR_JS_TOOLS = {
   raw: Raw,
   header: {
     class: Header,
+    shortcut: "CMD+SHIFT+H",
     inlineToolbar: ["link"],
+    config: {
+      placeholder: "Enter a header",
+      levels: [1, 2, 3],
+      defaultLevel: 1,
+    },
   },
   quote: Quote,
   marker: Marker,

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { BlogPost } from "../models/blogPostModel";
 import { formatDateToMonthDay } from "../utils/clock";
@@ -14,7 +14,19 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ blog }) => {
     formattedDateMonthDay = formatDateToMonthDay(blog.created_at);
 
   // Parse the content string to a JavaScript object
-  const contentObject = JSON.parse(blog.content);
+  let contentObject: any = {};
+
+  useEffect(() => {
+    try {
+      // Attempt to parse the content string to a JavaScript object
+      contentObject = JSON.parse(blog.content);
+    } catch (error) {
+      // Handle the error (log it, set a default value, etc.)
+      console.error("Error parsing JSON:", error);
+      // You can set a default value or handle the error in a way that fits your use case
+      contentObject = { blocks: [{ data: { text: blog.content } }] };
+    }
+  }, [blog.content]);
 
   return (
     <Link to={`/blog/${blog.id}`}>

@@ -56,7 +56,7 @@ const CreatePostView = () => {
       <button onClick={handleSubmit} className=" self-end mr-4 mt-3">
         SUBMIT
       </button>
-      <div className="flex flex-col justify-center m-auto bg-gray-100 mt-20">
+      <div className="flex flex-col justify-center w-2/4 m-auto  bg-gray-100 mt-20">
         <input
           type="text"
           value={title}

@@ -1,58 +1,62 @@
-import React, { useEffect } from "react";
-import EditorJS from "@editorjs/editorjs";
-import { useRef } from "react";
-import { Alert } from "@chakra-ui/react";
+import React, { useRef, useCallback, FC, useEffect } from "react";
+import EditorJS, { OutputData } from "@editorjs/editorjs";
+import { EDITOR_JS_TOOLS } from "./Tools";
+import "./Editor.css";
 
-const Editorv2 = () => {
-  const ref = useRef<EditorJS>();
+interface EditorProps {
+  data: OutputData;
+  setData: React.Dispatch<React.SetStateAction<OutputData>>;
+}
 
-  const initializeEditor = async () => {
-    const EditorJS = (await import("@editorjs/editorjs")).default;
-    const Header = (await import("@editorjs/header")).default;
-    const Table = (await import("@editorjs/table")).default;
-    const Embed = (await import("@editorjs/embed")).default;
-    const Code = (await import("@editorjs/code")).default;
-    const Quote = (await import("@editorjs/quote")).default;
-    const EditorImage = (await import("@editorjs/image")).default;
+const EditorDIV: FC<EditorProps> = ({ data, setData }) => {
+  const editorCore = useRef<EditorJS | null>(null);
 
-    if (!ref.current) {
-      const editor = new EditorJS({
-        holder: "editorjs",
-        tools: {
-          header: Header,
-          table: Table,
-          embed: Embed,
-          code: Code,
-          quote: Quote,
-          image: EditorImage,
-        },
-      });
-      ref.current = editor;
+  const handleInitialize = useCallback((instance: EditorJS) => {
+    // Set reference to editor
+    editorCore.current = instance;
+  }, []);
+
+  const handleSave = useCallback(async () => {
+    // Retrieve data inserted
+    const savedData = await editorCore.current?.save();
+    // Save data
+    if (savedData) {
+      setData(savedData);
     }
-  };
+  }, [setData]);
 
   useEffect(() => {
-    const init = async () => {
-      initializeEditor();
+    const initializeEditor = async () => {
+      if (!editorCore.current) {
+        const editor = new EditorJS({
+          holder: "editorjs",
+          tools: EDITOR_JS_TOOLS,
+          // autofocus: true,
+          placeholder: "Tell your story...",
+          onReady: () => {
+            console.log("Editor.js is ready to work!");
+          },
+        });
+        handleInitialize(editor);
+      }
     };
-    init();
-  });
 
-  const save = () => {
-    if (ref.current) {
-      ref.current.save().then((data) => {
-        console.log("Editor data: ", JSON.stringify(data));
-        alert(JSON.stringify(data));
-      });
-    }
-  };
+    initializeEditor();
+
+    // Cleanup on component unmount
+    // return () => {
+    //   if (editorCore.current) {
+    //     editorCore.current.destroy();
+    //   }
+    // };
+  }, [handleInitialize]);
 
   return (
     <>
-      <div id="editorjs" className="max-w-full min-h-screen prose" />
-      <button onClick={save}>Save</button>
+      <div id="editorjs" className="max-w-full w-full min-h-screen" />
+      <button onClick={handleSave}>Save</button>
     </>
   );
 };
 
-export default Editorv2;
+export default EditorDIV;
