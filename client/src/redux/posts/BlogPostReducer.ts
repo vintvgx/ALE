@@ -100,7 +100,7 @@ export const postBlogPost =
       dispatch(postBlogPostStart());
 
       const postData: BlogPostData = {
-        topic: { id: 1, name: "Other" },
+        topic: { id: 1, name: "Tech" },
         title: title,
         content: JSON.stringify(data),
         cover: null,

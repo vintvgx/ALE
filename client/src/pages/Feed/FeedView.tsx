@@ -32,7 +32,7 @@ const FeedView = () => {
       topics,
       topics.length
     );
-  }, []); // Empty dependency array
+  }, [blogPosts, dispatch, topics]); // Empty dependency array
 
   // if (blogPosts.length !== 0) console.log(blogPosts);
 

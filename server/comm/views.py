@@ -21,6 +21,28 @@ class TopicViewSet(viewsets.ModelViewSet):
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
     
+
+    
+# class BlogPostViewSet(viewsets.ModelViewSet):
+#     queryset = BlogPost.objects.all()
+#     serializer_class = BlogPostSerializer
+
+#     def get_serializer_context(self):
+#         # Pass the request object to the serializer context
+#         return {'request': self.request}
+
+#     @action(detail=False, methods=['get'])
+#     def user_posts(self, request, *args, **kwargs):
+#         # Retrieve and return the user's blog posts
+#         user = self.request.user
+#         posts = BlogPost.objects.filter(user=user)
+#         serializer = self.get_serializer(posts, many=True)
+#         return Response(serializer.data)
+
+#     def perform_create(self, serializer):
+#         # Associate the current user with the 'user' field during creation
+#         serializer.save(user=self.request.user)
+        
 class BlogPostViewSet(viewsets.ModelViewSet):
     queryset = BlogPost.objects.all()
     serializer_class = BlogPostSerializer
@@ -33,13 +55,9 @@ class BlogPostViewSet(viewsets.ModelViewSet):
     def user_posts(self, request, *args, **kwargs):
         # Retrieve and return the user's blog posts
         user = self.request.user
-        posts = BlogPost.objects.filter(user=user)
+        posts = BlogPost.objects.filter(author=user)
         serializer = self.get_serializer(posts, many=True)
         return Response(serializer.data)
-
-    def perform_create(self, serializer):
-        # Associate the current user with the 'user' field during creation
-        serializer.save(user=self.request.user)
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()

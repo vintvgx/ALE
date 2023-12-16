@@ -8,7 +8,11 @@ import Editorv2 from "../../utils/Editor/Editorv2";
 import { AppDispatch, useAppDispatch, useAppSelector } from "../../redux/store";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Topic } from "../../models/blogPostModel";
-import { postBlogPost } from "../../redux/posts/BlogPostReducer";
+import {
+  fetchBlogPosts,
+  fetchTopics,
+  postBlogPost,
+} from "../../redux/posts/BlogPostReducer";
 import { UserModel } from "../../models/userModel";
 
 const CreatePostView = () => {
@@ -33,6 +37,8 @@ const CreatePostView = () => {
       // If postBlogPostSuccess is returned
       setTitle("");
       setData(placeholder);
+      await dispatch(fetchTopics());
+      await dispatch(fetchBlogPosts());
       navigate("../feed");
     } catch (error) {
       // If there is an error

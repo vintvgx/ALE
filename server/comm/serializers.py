@@ -19,10 +19,10 @@ class TopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
         fields = '__all__'
-    
+        
 class BlogPostSerializer(serializers.ModelSerializer):
     topic = TopicSerializer()
-    user = UserSerializer(read_only=True)  # Mark the author field as read-only
+    author = UserSerializer(read_only=True)  # Mark the author field as read-only
 
     class Meta:
         model = BlogPost
@@ -46,6 +46,33 @@ class BlogPostSerializer(serializers.ModelSerializer):
         # Create the BlogPost instance
         blog_post = BlogPost.objects.create(**validated_data)
         return blog_post
+    
+# class BlogPostSerializer(serializers.ModelSerializer):
+#     topic = TopicSerializer()
+#     user = UserSerializer(read_only=True)  # Mark the author field as read-only
+
+#     class Meta:
+#         model = BlogPost
+#         fields = '__all__'
+
+
+#     def create(self, validated_data):
+#         # Extract the nested data
+#         topic_data = validated_data.pop('topic')
+
+#         # Create or get the related objects
+#         topic_instance, _ = Topic.objects.get_or_create(**topic_data)
+
+#         # Get the current user from the request
+#         user = self.context['request'].user
+
+#         # Update the validated_data with the related instances and user
+#         # validated_data['author'] = user
+#         validated_data['topic'] = topic_instance
+
+#         # Create the BlogPost instance
+#         blog_post = BlogPost.objects.create(**validated_data)
+#         return blog_post
 
 
 
