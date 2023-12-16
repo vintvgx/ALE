@@ -3,24 +3,31 @@ import Navbar from "../../components/NavBar";
 import BlogList from "../../components/BlogList";
 import { AppDispatch, useAppSelector } from "../../redux/store";
 import { useDispatch } from "react-redux";
-import {
-  fetchBlogPosts,
-  fetchTopics,
-  getBlogPosts,
-} from "../../redux/posts/blogPostSlice";
 import PlusIcon from "../../components/AddPostBtn";
+import { getUser, verify } from "../../redux/user/AuthReducer";
+import { fetchBlogPosts, fetchTopics } from "../../redux/posts/BlogPostReducer";
 
 const FeedView = () => {
   const dispatch: AppDispatch = useDispatch();
 
-  const { topics, blogPosts, isLoading, isError } = useAppSelector(
-    ({ blogList }) => blogList
-  );
+  const { topics, blogPosts } = useAppSelector((state) => state.blogPost);
 
   useEffect(() => {
-    dispatch(fetchTopics());
-    dispatch(fetchBlogPosts());
-  }, [dispatch]);
+    const fetchData = async () => {
+      await dispatch(fetchTopics());
+      await dispatch(fetchBlogPosts());
+    };
+
+    if (topics.length === 0 && blogPosts.length === 0) {
+      fetchData();
+    }
+
+    console.log(
+      "🚀 ~ file: FeedView.tsx:13 ~ FeedView ~ blogPosts:",
+      blogPosts,
+      blogPosts.length
+    );
+  }, [blogPosts, dispatch, topics]); // Empty dependency array
 
   // if (blogPosts.length !== 0) console.log(blogPosts);
 

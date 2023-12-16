@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import UserView from "../components/UserView";
-import { User } from "../models/userModel";
+import { UserModel } from "../models/userModel";
 
 const UserList: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<UserModel[]>([]);
   const [error, setError] = useState<string | null>(null); // State to track errors
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const UserList: React.FC = () => {
       {error ? (
         <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>
       ) : (
-        users.map((user) => <UserView key={user.id} {...user} />)
+        users.map((user) => <UserView key={user.pk} {...user} />)
       )}
     </div>
   );

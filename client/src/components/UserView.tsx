@@ -1,14 +1,13 @@
 import React from "react";
-import { User } from "../models/userModel";
+import { UserModel } from "../models/userModel";
 
-const UserView: React.FC<User> = ({ id, username, email, bio, avatar }) => {
+const UserView: React.FC<UserModel> = ({ pk, username, email, avatar }) => {
   return (
     <div>
       <h2>User Details</h2>
-      <p>ID: {id}</p>
+      <p>ID: {pk}</p>
       <p>Username: {username}</p>
       <p>Email: {email}</p>
-      <p>Bio: {bio}</p>
       {avatar && (
         <div>
           <p>Avatar:</p>

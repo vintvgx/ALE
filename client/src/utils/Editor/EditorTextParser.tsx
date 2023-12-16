@@ -7,7 +7,7 @@ import "./Editor.css";
 const edjsParser = edjsHTML();
 
 interface EditorTextParserProps {
-  data: OutputData; // Adjust the type of data accordingly
+  data: OutputData | undefined; // Adjust the type of data accordingly
 }
 
 const EditorTextParser: React.FC<EditorTextParserProps> = ({ data }) => {
@@ -16,7 +16,7 @@ const EditorTextParser: React.FC<EditorTextParserProps> = ({ data }) => {
   const html = edjsParser.parse(data);
   console.log("🚀 ~ file: EditorTextParser.tsx:16 ~ html:", html);
 
-  return <div className="text-container">{parse(html.join(""))}</div>;
+  return <div className="text-container w-4/5">{parse(html.join(""))}</div>;
 };
 
 export default EditorTextParser;

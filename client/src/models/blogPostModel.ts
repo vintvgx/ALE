@@ -1,4 +1,4 @@
-import { User } from "./userModel";
+import { UserModel } from "./userModel";
 
 export interface Topic {
   id: number;
@@ -15,10 +15,19 @@ export interface BlogContent {
 }
 
 export interface BlogPost {
+  id: number;
+  user: UserModel | undefined; //TODO change in models.py author -> user
+  topic: Topic;
   title: string;
   content: string;
-  created_at: string; //TODO change in models.py created_at -> published
-  author: User | undefined; //TODO change in models.py author -> user
-  cover: File | string | null;
+  created_at?: string | undefined; //TODO change in models.py created_at -> published
+  cover?: File | string | null;
+}
+
+export interface BlogPostData {
   topic: Topic;
+  title: string;
+  content: string;
+  cover?: string | null;
+  user: number;
 }
