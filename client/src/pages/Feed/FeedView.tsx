@@ -22,6 +22,8 @@ const FeedView = () => {
       fetchData();
     }
 
+    console.log("🚀 ~ file: FeedView.tsx:14 ~ FeedView ~ topics:", topics);
+
     console.log(
       "🚀 ~ file: FeedView.tsx:13 ~ FeedView ~ blogPosts:",
       blogPosts,

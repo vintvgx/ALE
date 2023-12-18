@@ -124,22 +124,62 @@ export const fetchTopics = () => async (dispatch: any) => {
   }
 };
 
+// export const postBlogPost =
+//   (title: string, data: any, user: UserModel) => async (dispatch: any) => {
+//     try {
+//       dispatch(postBlogPostStart());
+
+//       const postData: BlogPostData = {
+//         topic: { id: 1, name: "Tech" },
+//         title: title,
+//         content: JSON.stringify(data),
+//         cover: null,
+//         user: user.pk,
+//       };
+
+//       console.log(postData);
+
+//       await axios.post("http://127.0.0.1:8000/api/blogposts/", postData);
+
+//       dispatch(postBlogPostSuccess());
+
+//       // Reset the form or perform any other necessary actions
+//       // setTitle("");
+//       // setData(placeholder);
+//     } catch (error) {
+//       dispatch(postBlogPostFailure("Error submitting post"));
+//       console.error("Error submitting post:", error);
+//       // Handle error as needed
+//     }
+//   };
+
+// In your BlogPostReducer.ts file
 export const postBlogPost =
-  (title: string, data: any, user: UserModel) => async (dispatch: any) => {
+  (formData: FormData, user: UserModel) => async (dispatch: any) => {
     try {
+      const topic: Topic = { id: 1, name: "Other" };
+      const topicString = JSON.stringify(topic);
+
       dispatch(postBlogPostStart());
 
-      const postData: BlogPostData = {
-        topic: { id: 1, name: "Tech" },
-        title: title,
-        content: JSON.stringify(data),
-        cover: null,
-        user: user.pk,
-      };
+      formData.append("user", user.pk.toString());
+      // formData.append("topic", topicString);
 
-      console.log(postData);
+      console.log(
+        "FormData content from Reducer:",
+        Array.from(formData.entries())
+      );
 
-      await axios.post("http://127.0.0.1:8000/api/blogposts/", postData);
+      await axios
+        .post("http://127.0.0.1:8000/api/blogposts/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => console.log(err));
 
       dispatch(postBlogPostSuccess());
 

@@ -18,62 +18,45 @@ class TagSerializer(serializers.ModelSerializer):
 class TopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
-        fields = '__all__'
+        fields = ["id"]
         
-class BlogPostSerializer(serializers.ModelSerializer):
-    topic = TopicSerializer()
-    author = UserSerializer(read_only=True)  # Mark the author field as read-only
+class TopicCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Topic
+        fields = ['id']
+
+class TopicListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Topic
+        fields = '__all__'
+
+class BlogPostListSerializer(serializers.ModelSerializer):
+    topic = TopicListSerializer()
+    user = UserSerializer()
 
     class Meta:
         model = BlogPost
         fields = '__all__'
+        
+class BlogPostSerializer(serializers.ModelSerializer):
+    topic = serializers.PrimaryKeyRelatedField(queryset=Topic.objects.all())  # Use PrimaryKeyRelatedField to expect an ID
+    author = UserSerializer(read_only=True)  # Mark the author field as read-only
 
+    class Meta:
+        model = BlogPost
+        fields = ['title', 'content', 'created_at', 'topic', 'cover', 'author']  # Include 'author' field
 
     def create(self, validated_data):
-        # Extract the nested data
-        topic_data = validated_data.pop('topic')
-
-        # Create or get the related objects
-        topic_instance, _ = Topic.objects.get_or_create(**topic_data)
-
         # Get the current user from the request
         user = self.context['request'].user
 
-        # Update the validated_data with the related instances and user
-        # validated_data['author'] = user
-        validated_data['topic'] = topic_instance
+        # Extract the nested data
+        topic_instance = validated_data.pop('topic')
 
-        # Create the BlogPost instance
-        blog_post = BlogPost.objects.create(**validated_data)
+        # Create the BlogPost instance with the topic and author set
+        blog_post = BlogPost.objects.create(user=user, topic=topic_instance, **validated_data)
+
         return blog_post
-    
-# class BlogPostSerializer(serializers.ModelSerializer):
-#     topic = TopicSerializer()
-#     user = UserSerializer(read_only=True)  # Mark the author field as read-only
-
-#     class Meta:
-#         model = BlogPost
-#         fields = '__all__'
-
-
-#     def create(self, validated_data):
-#         # Extract the nested data
-#         topic_data = validated_data.pop('topic')
-
-#         # Create or get the related objects
-#         topic_instance, _ = Topic.objects.get_or_create(**topic_data)
-
-#         # Get the current user from the request
-#         user = self.context['request'].user
-
-#         # Update the validated_data with the related instances and user
-#         # validated_data['author'] = user
-#         validated_data['topic'] = topic_instance
-
-#         # Create the BlogPost instance
-#         blog_post = BlogPost.objects.create(**validated_data)
-#         return blog_post
-
 
 
 class CommentSerializer(serializers.ModelSerializer):

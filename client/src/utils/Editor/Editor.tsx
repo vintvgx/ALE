@@ -43,7 +43,6 @@ const Editor: FC<EditorProps> = ({ data, setData }) => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "flex-start", // Align content to the left
-
         alignItems: "flex-start",
       }}>
       {/* <ReactEditorJS

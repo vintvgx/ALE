@@ -54,7 +54,6 @@ const EditorDIV: FC<EditorProps> = ({ data, setData }) => {
   return (
     <>
       <div id="editorjs" className="max-w-full w-full min-h-screen" />
-      <button onClick={handleSave}>Save</button>
     </>
   );
 };
