@@ -75,9 +75,9 @@ class BlogPostViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(posts, many=True)
         return Response(serializer.data)
 
-    def perform_create(self, serializer):
-        # Associate the current user with the 'user' field during creation
-        serializer.save(user=self.request.user)
+    # def perform_create(self, serializer):
+    #     # Associate the current user with the 'user' field during creation
+    #     serializer.save(user=self.request.user)
 
     def get_serializer_class(self):
         # Use different serializers for different request methods

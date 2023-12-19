@@ -36,31 +36,35 @@ const CreatePostView = () => {
       return;
     }
 
-    try {
-      const topic: Topic = { id: 1, name: "Option" };
+    if (user) {
+      try {
+        const topic: Topic = { id: 1, name: "Option" };
 
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("content", JSON.stringify(data));
-      formData.append("cover", coverImage || ""); // Ensure it's not null
-      formData.append("topic", topic.id.toString());
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("content", JSON.stringify(data));
+        formData.append("cover", coverImage || ""); // Ensure it's not null
+        formData.append("topic", topic.id.toString());
 
-      console.log(
-        "FormData content from CreateView:",
-        Array.from(formData.entries())
-      );
+        console.log(
+          "FormData content from CreateView:",
+          Array.from(formData.entries())
+        );
 
-      await dispatch(postBlogPost(formData, user as UserModel));
-      // setTitle("");
-      // setData(placeholder);
-      // setCoverImage(undefined);
-      // await dispatch(fetchTopics());
-      // await dispatch(fetchBlogPosts());
-      // navigate("../feed");
-    } catch (error) {
-      alert("Error submitting post. Please try again.");
-      console.error("Error submitting post:", error);
-      console.log(isError);
+        await dispatch(postBlogPost(formData, user as UserModel));
+        setTitle("");
+        setData(placeholder);
+        setCoverImage(undefined);
+        await dispatch(fetchTopics());
+        await dispatch(fetchBlogPosts());
+        navigate("../feed");
+      } catch (error) {
+        alert("Error submitting post. Please try again.");
+        console.error("Error submitting post:", error);
+        console.log(isError);
+      }
+    } else {
+      alert("Please login before submitting a post.");
     }
   };
 

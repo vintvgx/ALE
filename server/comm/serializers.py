@@ -44,20 +44,23 @@ class BlogPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BlogPost
-        fields = ['title', 'content', 'created_at', 'topic', 'cover', 'author']  # Include 'author' field
+        fields = '__all__'
 
     def create(self, validated_data):
-        # Get the current user from the request
-        user = self.context['request'].user
+        # Get the user_id from the validated_data, or default to the currently authenticated user's id
+        user_id = validated_data.pop('user_id', None)
+        if user_id is None:
+            user = self.context['request'].user
+        else:
+            user = User.objects.get(id=user_id)
 
         # Extract the nested data
         topic_instance = validated_data.pop('topic')
 
         # Create the BlogPost instance with the topic and author set
-        blog_post = BlogPost.objects.create(user=user, topic=topic_instance, **validated_data)
+        blog_post = BlogPost.objects.create( topic=topic_instance, **validated_data)
 
         return blog_post
-
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
