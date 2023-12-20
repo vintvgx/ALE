@@ -8,7 +8,7 @@ interface EditorProps {
   setData: React.Dispatch<React.SetStateAction<OutputData>>;
 }
 
-const EditorDIV: FC<EditorProps> = ({ data, setData }) => {
+const EditorJSTextBox: FC<EditorProps> = ({ data, setData }) => {
   const editorCore = useRef<EditorJS | null>(null);
 
   const handleInitialize = useCallback((instance: EditorJS) => {
@@ -43,7 +43,7 @@ const EditorDIV: FC<EditorProps> = ({ data, setData }) => {
 
     initializeEditor();
 
-    // Cleanup on component unmount
+    // // Cleanup on component unmount
     // return () => {
     //   if (editorCore.current) {
     //     editorCore.current.destroy();
@@ -51,11 +51,19 @@ const EditorDIV: FC<EditorProps> = ({ data, setData }) => {
     // };
   }, [handleInitialize]);
 
+  useEffect(() => {
+    console.log("BLUR:", data);
+  });
+
   return (
     <>
-      <div id="editorjs" className="max-w-full w-full min-h-screen" />
+      <div
+        id="editorjs"
+        className="max-w-full w-full min-h-screen"
+        onBlur={handleSave}
+      />
     </>
   );
 };
 
-export default EditorDIV;
+export default EditorJSTextBox;

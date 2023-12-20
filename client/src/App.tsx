@@ -27,14 +27,6 @@ const App: React.FC = () => {
   );
 
   useEffect(() => {
-    console.log("message:", message);
-    console.log("refresh:", refresh);
-    console.log("access:", access);
-    console.log("isAuthenticated:", isAuthenticated);
-    console.log("user:", user);
-  });
-
-  useEffect(() => {
     dispatch(verify());
     dispatch(getUser());
   }, [dispatch]);

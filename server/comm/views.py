@@ -6,6 +6,7 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 from .models import User, Tag, BlogPost, Comment, Like, Follow, Topic
 from .serializers import BlogPostListSerializer, TopicListSerializer, UserSerializer, TagSerializer, TopicSerializer, BlogPostSerializer, CommentSerializer, LikeSerializer, FollowSerializer
 
@@ -67,11 +68,11 @@ class BlogPostViewSet(viewsets.ModelViewSet):
         # Pass the request object to the serializer context
         return {'request': self.request}
 
-    @action(detail=False, methods=['get'])
-    def user_posts(self, request, *args, **kwargs):
+    @action(detail=False, methods=['get'], url_path='user/(?P<user_id>\d+)')
+    def user_posts(self, request, user_id=None, *args, **kwargs):
         # Retrieve and return the user's blog posts
-        user = self.request.user
-        posts = BlogPost.objects.filter(author=user)
+        user = get_object_or_404(User, pk=user_id)
+        posts = BlogPost.objects.filter(user=user)        
         serializer = self.get_serializer(posts, many=True)
         return Response(serializer.data)
 

@@ -4,13 +4,12 @@ import BlogList from "../../components/BlogList";
 import { AppDispatch, useAppSelector } from "../../redux/store";
 import { useDispatch } from "react-redux";
 import PlusIcon from "../../components/AddPostBtn";
-import { getUser, verify } from "../../redux/user/AuthReducer";
 import { fetchBlogPosts, fetchTopics } from "../../redux/posts/BlogPostReducer";
 
 const FeedView = () => {
   const dispatch: AppDispatch = useDispatch();
-
   const { topics, blogPosts } = useAppSelector((state) => state.blogPost);
+  const { user } = useAppSelector((state) => state.user);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,29 +20,23 @@ const FeedView = () => {
     if (topics.length === 0 && blogPosts.length === 0) {
       fetchData();
     }
-
-    console.log("🚀 ~ file: FeedView.tsx:14 ~ FeedView ~ topics:", topics);
-
-    console.log(
-      "🚀 ~ file: FeedView.tsx:13 ~ FeedView ~ blogPosts:",
-      blogPosts,
-      blogPosts.length
-    );
-  }, [blogPosts, dispatch, topics]); // Empty dependency array
-
-  // if (blogPosts.length !== 0) console.log(blogPosts);
+  }, [blogPosts, dispatch, topics]);
 
   return (
-    <div className="w-screen p-4">
+    <div className="container mx-auto p-4">
       <Navbar
         title="Feed"
         searchPlaceholder="Search for blogs"
         searchBox={true}
-        notifications={true}
-        profile={true}
+        notifications={user ? true : false}
+        profile={user ? true : false}
       />
-      <BlogList topics={topics} blogs={blogPosts} />
-      <PlusIcon />
+      <div className="">
+        <BlogList topics={topics} blogs={blogPosts} />
+      </div>
+      <div className="fixed bottom-8 right-8">
+        <PlusIcon />
+      </div>
     </div>
   );
 };

@@ -10,24 +10,35 @@ import { useDispatch } from "react-redux";
 import EditorJS from "@editorjs/editorjs";
 import EditorTextParser from "../utils/Editor/EditorTextParser";
 import { OutputData } from "@editorjs/editorjs";
+import { Avatar, Spin, Button } from "antd";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { formatDateToMonthDay } from "../utils/clock";
 
 const BlogPostDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch: AppDispatch = useDispatch();
-  const editorContainerRef = useRef<HTMLDivElement | null>(null);
-  const editorCore = useRef<EditorJS | null>(null);
-
-  const handleInitialize = useCallback((instance: EditorJS) => {
-    // Set reference to editor
-    editorCore.current = instance;
-  }, []);
-
-  const [contentObject, setContentObject] = useState<OutputData | undefined>(
+  const [editable, setEditable] = useState<boolean>(false);
+  const [blogContent, setBlogContent] = useState<OutputData | undefined>(
     undefined
   );
+  var formattedDateMonthDay = "";
+
   const { detailPost, isError, isLoading } = useAppSelector(
     (state) => state.blogPost
   );
+
+  const { user } = useAppSelector((state) => state.user);
+
+  useEffect(() => {
+    console.log(user?.pk, " ***** ", detailPost?.user?.pk);
+    if (
+      detailPost?.user?.pk === user?.pk &&
+      detailPost?.user?.pk !== undefined &&
+      user?.pk !== undefined
+    ) {
+      setEditable(true);
+    }
+  }, [detailPost, editable, user]);
 
   useEffect(() => {
     const fetchPostDetail = async () => {
@@ -38,57 +49,96 @@ const BlogPostDetail: React.FC = () => {
     if (!detailPost) {
       fetchPostDetail();
     }
-    console.log("🚀 ~ file: BlogPostDetail.tsx:29 ~ detailPost:", detailPost);
-    console.log(
-      "🚀 ~ file: BlogPostDetail.tsx:29 ~ detailPost content:",
-      detailPost?.content
-    );
   }, [dispatch, id, detailPost]);
 
   useEffect(() => {
     return () => {
-      // Code to run when the component is unmounted
       console.log("Component is unmounted. Cleanup code here.");
       dispatch(resetDetailPost());
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
-    const initializeEditor = async (initialData: any) => {
-      if (!editorCore.current) {
-        const data =
-          typeof initialData === "string"
-            ? JSON.parse(initialData)
-            : initialData;
+    if (detailPost?.content) {
+      const data =
+        typeof detailPost.content === "string"
+          ? JSON.parse(detailPost.content)
+          : detailPost.content;
 
-        const editor = new EditorJS({
-          holder: "editorjs",
-          readOnly: true,
-          data,
-        });
+      setBlogContent(data);
+    }
+  }, [detailPost]);
 
-        handleInitialize(editor);
-      }
-    };
-
-    initializeEditor(detailPost?.content);
-  }, [handleInitialize]);
+  if (detailPost?.created_at)
+    formattedDateMonthDay = formatDateToMonthDay(detailPost?.created_at);
 
   if (isLoading) {
-    // Optional: You can add a loading spinner or message while the data is being fetched
-    return <div>Loading...</div>;
+    return (
+      <div className="container mx-auto my-8 p-4 bg-white shadow-lg rounded-lg">
+        <div className="flex items-center justify-center h-48">
+          <Spin size="large" />
+        </div>
+      </div>
+    );
   }
 
   if (detailPost === undefined) {
-    // Handle the case where the blog post is not found
-    return <div>Blog post not found</div>;
+    return (
+      <div className="container mx-auto my-8 p-4 bg-white shadow-lg rounded-lg">
+        <div className="text-center">Blog post not found</div>
+      </div>
+    );
   }
 
   return (
-    <div className="flex flex-col items-center mt-10 h-screen auth-view bg-white">
-      {/* Render the detailed view of the blog post */}
-      <h1>{detailPost.title}</h1>
-      {/* <div id="editorjs" className="max-w-full w-full min-h-screen" /> */}
+    <div className="container mx-auto my-8 p-4 bg-white shadow-lg rounded-lg">
+      <div className="mb-4">
+        <img
+          src={detailPost.cover?.toString() || ""} // assuming detailPost has a cover property
+          alt={detailPost.title}
+          className="w-full h-80 object-cover rounded-lg mb-4"
+        />
+
+        <div className="mb-4 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold mb-4">{detailPost.title}</h1>
+            <p className="text-gray-500 mb-2">
+              Published on {formattedDateMonthDay}
+            </p>
+            {editable && (
+              <div className="flex mb-4">
+                <Button
+                  type="default"
+                  shape="round"
+                  icon={<EditOutlined />}
+                  className="mr-2">
+                  Edit
+                </Button>
+                <Button type="default" shape="round" icon={<DeleteOutlined />}>
+                  Delete
+                </Button>
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col items-center">
+            <Avatar
+              size={40}
+              src={detailPost.user?.avatar} // assuming detailPost has a user property
+              alt={detailPost.user?.username}
+            />
+            <span className="ml-2 text-sm">{detailPost.user?.username}</span>
+          </div>
+        </div>
+      </div>
+      <div className="prose max-w-full w-full min-h-screen">
+        {blogContent ? (
+          <EditorTextParser data={blogContent} />
+        ) : (
+          <div className="flex items-center justify-center h-48">
+            <Spin size="large" />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

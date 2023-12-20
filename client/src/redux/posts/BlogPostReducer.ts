@@ -5,18 +5,22 @@ import { UserModel } from "../../models/userModel";
 
 interface Posts {
   blogPosts: BlogPost[];
+  userBlogPosts: BlogPost[];
   detailPost: BlogPost | undefined;
   topics: Topic[];
   isLoading: boolean;
   isError: string | undefined;
+  progress: number;
 }
 
 const initialState: Posts = {
   blogPosts: [],
+  userBlogPosts: [],
   detailPost: undefined,
   topics: [],
   isLoading: false,
   isError: undefined,
+  progress: 0,
 };
 
 const blogSlice = createSlice({
@@ -75,6 +79,14 @@ const blogSlice = createSlice({
       state.isLoading = false;
       state.isError = undefined;
     },
+    getUserBlogPosts: (state: Posts, action: PayloadAction<BlogPost[]>) => {
+      state.userBlogPosts = action.payload;
+      state.isLoading = false;
+      state.isError = undefined;
+    },
+    updateProgress: (state, action: PayloadAction<number>) => {
+      state.progress = action.payload;
+    },
     resetDetailPost: (state) => {
       state.detailPost = undefined;
     },
@@ -93,6 +105,8 @@ export const {
   getBlogPostByIdSuccess,
   getBlogPostByIdFailure,
   getBlogPostById,
+  getUserBlogPosts,
+  updateProgress,
   resetDetailPost,
 } = blogSlice.actions;
 
@@ -124,34 +138,19 @@ export const fetchTopics = () => async (dispatch: any) => {
   }
 };
 
-// export const postBlogPost =
-//   (title: string, data: any, user: UserModel) => async (dispatch: any) => {
-//     try {
-//       dispatch(postBlogPostStart());
-
-//       const postData: BlogPostData = {
-//         topic: { id: 1, name: "Tech" },
-//         title: title,
-//         content: JSON.stringify(data),
-//         cover: null,
-//         user: user.pk,
-//       };
-
-//       console.log(postData);
-
-//       await axios.post("http://127.0.0.1:8000/api/blogposts/", postData);
-
-//       dispatch(postBlogPostSuccess());
-
-//       // Reset the form or perform any other necessary actions
-//       // setTitle("");
-//       // setData(placeholder);
-//     } catch (error) {
-//       dispatch(postBlogPostFailure("Error submitting post"));
-//       console.error("Error submitting post:", error);
-//       // Handle error as needed
-//     }
-//   };
+export const fetchUserBlogPosts =
+  (userId: number | undefined) => async (dispatch: any) => {
+    try {
+      dispatch(postsLoading(true));
+      const res = await axios.get(
+        `http://127.0.0.1:8000/api/blogposts/user/${userId}`
+      );
+      const userBlogPostsData = res.data;
+      dispatch(getUserBlogPosts(userBlogPostsData));
+    } catch (error) {
+      dispatch(postsError("Error"));
+    }
+  };
 
 // In your BlogPostReducer.ts file
 export const postBlogPost =
@@ -162,7 +161,7 @@ export const postBlogPost =
 
       dispatch(postBlogPostStart());
 
-      formData.append("user", user.pk.toString());
+      formData.append("user", user.pk?.toString() ?? "");
       // formData.append("topic", topicString);
 
       console.log(
@@ -172,6 +171,12 @@ export const postBlogPost =
 
       await axios
         .post("http://127.0.0.1:8000/api/blogposts/", formData, {
+          onUploadProgress: (progressEvent) => {
+            let percentCompleted = progressEvent.total
+              ? Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              : 0;
+            dispatch(updateProgress(percentCompleted));
+          },
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -182,6 +187,7 @@ export const postBlogPost =
         .catch((err) => console.log(err));
 
       dispatch(postBlogPostSuccess());
+      dispatch(updateProgress(0));
 
       // Reset the form or perform any other necessary actions
       // setTitle("");
