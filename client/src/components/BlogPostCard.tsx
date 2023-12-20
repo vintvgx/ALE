@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BlogPost } from "../models/blogPostModel";
 import { formatDateToMonthDay } from "../utils/clock";
@@ -14,7 +14,32 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ blog }) => {
     formattedDateMonthDay = formatDateToMonthDay(blog.created_at);
 
   // Parse the content string to a JavaScript object
-  const contentObject = JSON.parse(blog.content);
+  const [contentObject, setContentObject] = useState<{
+    blocks: { data: { text: string } }[];
+  }>();
+
+  useEffect(() => {
+    const isJsonString = (str: string) => {
+      try {
+        JSON.parse(str);
+      } catch (e) {
+        return false;
+      }
+      return true;
+    };
+
+    if (isJsonString(blog.content)) {
+      setContentObject(JSON.parse(blog.content));
+    } else {
+      setContentObject({ blocks: [{ data: { text: blog.content } }] });
+    }
+  }, [blog.content]);
+
+  // ...
+
+  <p className="w-2/3">
+    {contentObject?.blocks?.[0]?.data?.text.slice(0, 20)}
+  </p>;
 
   return (
     <Link to={`/blog/${blog.id}`}>
@@ -53,20 +78,17 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ blog }) => {
             <div className="w-full">
               <h1 className="text-2xl font-semibold mb-2">{blog.title}</h1>
               <div className="text-gray-800 w-full">
-                {contentObject.blocks &&
-                  contentObject.blocks.map((block: any, index: any) => (
-                    <p className="w-2/3" key={index}>
-                      {block.data.text.slice(0, 20)}
-                    </p>
-                  ))}
+                <p className="w-2/3">
+                  {contentObject?.blocks?.[0]?.data?.text.slice(0, 20)}
+                </p>
               </div>
             </div>
 
             <div className="mt-4">
               <p className="text-gray-600 text-sm">
-                {/* {blog.author && (
-                <span className="mr-2">Author: {blog.author.username}</span>
-              )} */}
+                {/* {blog.user && (
+                  <span className="mr-2">Author: {blog.user.username}</span>
+                )} */}
                 {formattedDateMonthDay}
               </p>
             </div>

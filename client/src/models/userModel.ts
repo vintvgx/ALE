@@ -1,5 +1,6 @@
 export interface UserModel {
-  pk: number; // Assuming your id field is of type AutoField or similar
+  pk: number | undefined; // Assuming your id field is of type AutoField or similar
+  id?: number | undefined;
   email: string;
   username: string;
   first_name: string;

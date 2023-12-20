@@ -16,6 +16,11 @@ const EditorTextParser: React.FC<EditorTextParserProps> = ({ data }) => {
   const html = edjsParser.parse(data);
   console.log("🚀 ~ file: EditorTextParser.tsx:16 ~ html:", html);
 
+  if (data === undefined) {
+    // Handle the case where data is undefined
+    return <div>No content to display</div>;
+  }
+
   return <div className="text-container w-4/5">{parse(html.join(""))}</div>;
 };
 

@@ -5,18 +5,22 @@ import { UserModel } from "../../models/userModel";
 
 interface Posts {
   blogPosts: BlogPost[];
+  userBlogPosts: BlogPost[];
   detailPost: BlogPost | undefined;
   topics: Topic[];
   isLoading: boolean;
   isError: string | undefined;
+  progress: number;
 }
 
 const initialState: Posts = {
   blogPosts: [],
+  userBlogPosts: [],
   detailPost: undefined,
   topics: [],
   isLoading: false,
   isError: undefined,
+  progress: 0,
 };
 
 const blogSlice = createSlice({
@@ -75,6 +79,17 @@ const blogSlice = createSlice({
       state.isLoading = false;
       state.isError = undefined;
     },
+    getUserBlogPosts: (state: Posts, action: PayloadAction<BlogPost[]>) => {
+      state.userBlogPosts = action.payload;
+      state.isLoading = false;
+      state.isError = undefined;
+    },
+    updateProgress: (state, action: PayloadAction<number>) => {
+      state.progress = action.payload;
+    },
+    resetDetailPost: (state) => {
+      state.detailPost = undefined;
+    },
   },
 });
 
@@ -90,6 +105,9 @@ export const {
   getBlogPostByIdSuccess,
   getBlogPostByIdFailure,
   getBlogPostById,
+  getUserBlogPosts,
+  updateProgress,
+  resetDetailPost,
 } = blogSlice.actions;
 
 export default blogSlice.reducer;
@@ -120,24 +138,56 @@ export const fetchTopics = () => async (dispatch: any) => {
   }
 };
 
-export const postBlogPost =
-  (title: string, data: any, user: UserModel) => async (dispatch: any) => {
+export const fetchUserBlogPosts =
+  (userId: number | undefined) => async (dispatch: any) => {
     try {
+      dispatch(postsLoading(true));
+      const res = await axios.get(
+        `http://127.0.0.1:8000/api/blogposts/user/${userId}`
+      );
+      const userBlogPostsData = res.data;
+      dispatch(getUserBlogPosts(userBlogPostsData));
+    } catch (error) {
+      dispatch(postsError("Error"));
+    }
+  };
+
+// In your BlogPostReducer.ts file
+export const postBlogPost =
+  (formData: FormData, user: UserModel) => async (dispatch: any) => {
+    try {
+      const topic: Topic = { id: 1, name: "Other" };
+      const topicString = JSON.stringify(topic);
+
       dispatch(postBlogPostStart());
 
-      const postData: BlogPostData = {
-        topic: { id: 1, name: "Tech" },
-        title: title,
-        content: JSON.stringify(data),
-        cover: null,
-        user: user.pk,
-      };
+      formData.append("user", user.pk?.toString() ?? "");
+      // formData.append("topic", topicString);
 
-      console.log(postData);
+      console.log(
+        "FormData content from Reducer:",
+        Array.from(formData.entries())
+      );
 
-      await axios.post("http://127.0.0.1:8000/api/blogposts/", postData);
+      await axios
+        .post("http://127.0.0.1:8000/api/blogposts/", formData, {
+          onUploadProgress: (progressEvent) => {
+            let percentCompleted = progressEvent.total
+              ? Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              : 0;
+            dispatch(updateProgress(percentCompleted));
+          },
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => console.log(err));
 
       dispatch(postBlogPostSuccess());
+      dispatch(updateProgress(0));
 
       // Reset the form or perform any other necessary actions
       // setTitle("");
@@ -156,8 +206,20 @@ export const fetchBlogPostById = (postId: number) => async (dispatch: any) => {
       `http://127.0.0.1:8000/api/blogposts/${postId}/`
     );
     const blogPostData: BlogPost = res.data;
+    console.log(blogPostData);
     dispatch(getBlogPostById(blogPostData));
   } catch (error) {
     dispatch(getBlogPostByIdFailure("Error"));
+  }
+};
+
+export const deleteBlogPostById = (postId: number) => async (dispatch: any) => {
+  try {
+    await axios.delete(`http://127.0.0.1:8000/api/blogposts/${postId}/`);
+    console.log(`Blog post with ID ${postId} deleted successfully.`);
+    // You can dispatch an action here if needed
+  } catch (error) {
+    console.error(`Error deleting blog post with ID ${postId}:`, error);
+    // You can dispatch an action here if needed
   }
 };

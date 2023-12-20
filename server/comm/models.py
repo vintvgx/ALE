@@ -32,7 +32,7 @@ class BlogPost(models.Model):
 
     def get_cover_upload_path(instance, filename):
         # Update the path based on user's uid and blog post title
-        return f'posts/{instance.user.uid}/{instance.title}/cover/{filename}'
+        return f'posts/{instance.user.id}/{instance.title}/cover/{filename}'
 
     # Set the upload_to argument to the custom function
     cover = models.ImageField(upload_to=get_cover_upload_path, null=True)
