@@ -1,16 +1,18 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { BlogPost } from "../models/blogPostModel";
 import {
   fetchBlogPostById,
   resetDetailPost,
+  deleteBlogPostById,
+  fetchBlogPosts,
 } from "../redux/posts/BlogPostReducer";
 import { AppDispatch, useAppSelector } from "../redux/store";
 import { useDispatch } from "react-redux";
 import EditorJS from "@editorjs/editorjs";
 import EditorTextParser from "../utils/Editor/EditorTextParser";
 import { OutputData } from "@editorjs/editorjs";
-import { Avatar, Spin, Button } from "antd";
+import { Avatar, Spin, Button, Modal } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { formatDateToMonthDay } from "../utils/clock";
 
@@ -22,23 +24,13 @@ const BlogPostDetail: React.FC = () => {
     undefined
   );
   var formattedDateMonthDay = "";
+  const navigate = useNavigate();
 
   const { detailPost, isError, isLoading } = useAppSelector(
     (state) => state.blogPost
   );
 
   const { user } = useAppSelector((state) => state.user);
-
-  useEffect(() => {
-    console.log(user?.pk, " ***** ", detailPost?.user?.pk);
-    if (
-      detailPost?.user?.pk === user?.pk &&
-      detailPost?.user?.pk !== undefined &&
-      user?.pk !== undefined
-    ) {
-      setEditable(true);
-    }
-  }, [detailPost, editable, user]);
 
   useEffect(() => {
     const fetchPostDetail = async () => {
@@ -49,6 +41,10 @@ const BlogPostDetail: React.FC = () => {
     if (!detailPost) {
       fetchPostDetail();
     }
+    console.log(
+      "🚀 ~ file: BlogPostDetail.tsx:42 ~ useEffect ~ detailPost:",
+      detailPost
+    );
   }, [dispatch, id, detailPost]);
 
   useEffect(() => {
@@ -68,6 +64,35 @@ const BlogPostDetail: React.FC = () => {
       setBlogContent(data);
     }
   }, [detailPost]);
+
+  useEffect(() => {
+    console.log(user?.pk, " ***** ", detailPost?.user?.id);
+    if (
+      detailPost?.user?.id === user?.pk &&
+      detailPost?.user?.id !== undefined &&
+      user?.pk !== undefined
+    ) {
+      setEditable(true);
+    }
+  }, [detailPost, editable, user]);
+
+  const handleDelete = useCallback(async () => {
+    const postId = Number(id);
+    await dispatch(deleteBlogPostById(postId));
+    await dispatch(fetchBlogPosts());
+    navigate("../feed");
+  }, [dispatch, id, navigate]);
+
+  const showDeleteConfirmation = useCallback(() => {
+    Modal.confirm({
+      title: "Confirm Deletion",
+      content: "Are you sure you want to delete this blog post?",
+      okText: "Delete",
+      okType: "danger",
+      cancelText: "Cancel",
+      onOk: handleDelete,
+    });
+  }, [handleDelete]);
 
   if (detailPost?.created_at)
     formattedDateMonthDay = formatDateToMonthDay(detailPost?.created_at);
@@ -114,7 +139,11 @@ const BlogPostDetail: React.FC = () => {
                   className="mr-2">
                   Edit
                 </Button>
-                <Button type="default" shape="round" icon={<DeleteOutlined />}>
+                <Button
+                  type="default"
+                  shape="round"
+                  icon={<DeleteOutlined />}
+                  onClick={showDeleteConfirmation}>
                   Delete
                 </Button>
               </div>

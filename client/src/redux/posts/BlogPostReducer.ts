@@ -212,3 +212,14 @@ export const fetchBlogPostById = (postId: number) => async (dispatch: any) => {
     dispatch(getBlogPostByIdFailure("Error"));
   }
 };
+
+export const deleteBlogPostById = (postId: number) => async (dispatch: any) => {
+  try {
+    await axios.delete(`http://127.0.0.1:8000/api/blogposts/${postId}/`);
+    console.log(`Blog post with ID ${postId} deleted successfully.`);
+    // You can dispatch an action here if needed
+  } catch (error) {
+    console.error(`Error deleting blog post with ID ${postId}:`, error);
+    // You can dispatch an action here if needed
+  }
+};
