@@ -24,6 +24,16 @@ export interface BlogPost {
   cover?: File | string | null;
 }
 
+export interface DispatchBlogPost {
+  id: number;
+  user: number;
+  topic: number;
+  title: string;
+  content: string;
+  created_at?: string | undefined;
+  cover?: string | null;
+}
+
 export interface BlogPostData {
   topic: Topic;
   title: string;

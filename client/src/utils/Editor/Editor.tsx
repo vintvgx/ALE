@@ -6,8 +6,8 @@ import "./Editor.css";
 import EditorDIV from "./EditorJSTextBox";
 
 interface EditorProps {
-  data: OutputData;
-  setData: React.Dispatch<React.SetStateAction<OutputData>>;
+  data: OutputData | undefined;
+  setData: React.Dispatch<React.SetStateAction<OutputData | undefined>>;
 }
 
 const Editor: FC<EditorProps> = ({ data, setData }) => {

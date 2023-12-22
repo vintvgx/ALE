@@ -103,7 +103,6 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   };
 
   const handleItemClick = (item: string) => {
-    console.log(`Selected item: ${item}`);
     setSelectedContent(item);
     setIsOpen(false);
     setIsAddButtonVisible(false); // Hide the "Add Content" button

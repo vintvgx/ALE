@@ -114,14 +114,11 @@ export default blogSlice.reducer;
 
 export const fetchBlogPosts = () => async (dispatch: any) => {
   try {
-    console.log("FETCH");
     dispatch(postsLoading(true));
     const res = await axios.get("http://127.0.0.1:8000/api/blogposts/");
-    console.log("🚀 ~ file: blogPostSlice.ts:46 ~ fetchBlogPosts ~ res:", res);
 
     const blogListData = res.data;
     dispatch(getBlogPosts(blogListData));
-    console.log("FETCHED");
   } catch (error) {
     dispatch(postsError("Error"));
   }
@@ -156,9 +153,6 @@ export const fetchUserBlogPosts =
 export const postBlogPost =
   (formData: FormData, user: UserModel) => async (dispatch: any) => {
     try {
-      const topic: Topic = { id: 1, name: "Other" };
-      const topicString = JSON.stringify(topic);
-
       dispatch(postBlogPostStart());
 
       formData.append("user", user.pk?.toString() ?? "");
@@ -206,7 +200,6 @@ export const fetchBlogPostById = (postId: number) => async (dispatch: any) => {
       `http://127.0.0.1:8000/api/blogposts/${postId}/`
     );
     const blogPostData: BlogPost = res.data;
-    console.log(blogPostData);
     dispatch(getBlogPostById(blogPostData));
   } catch (error) {
     dispatch(getBlogPostByIdFailure("Error"));
@@ -223,3 +216,42 @@ export const deleteBlogPostById = (postId: number) => async (dispatch: any) => {
     // You can dispatch an action here if needed
   }
 };
+
+export const updateBlogPost =
+  (postUpdate: BlogPost) => async (dispatch: any) => {
+    try {
+      dispatch(postBlogPostStart());
+
+      console.log("REDUX UPDATEBLOGPOST", postUpdate);
+
+      const formData = new FormData();
+      formData.append("id", postUpdate.id.toString());
+      formData.append("user", postUpdate.user?.id?.toString() ?? "");
+      formData.append("title", postUpdate.title);
+      formData.append("content", postUpdate.content);
+      formData.append("topic", postUpdate.topic.id.toString());
+
+      if (postUpdate.cover instanceof File) {
+        formData.append("cover", postUpdate.cover);
+        console.log("file");
+      } else if (typeof postUpdate.cover === "string") {
+        formData.append("cover", postUpdate.cover);
+        console.log("string");
+      }
+
+      await axios.put(
+        `http://127.0.0.1:8000/api/blogposts/${postUpdate.id}/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      dispatch(postBlogPostSuccess());
+    } catch (error) {
+      dispatch(postBlogPostFailure("Error updating post"));
+      console.error("Error updating post:", error);
+    }
+  };

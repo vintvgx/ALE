@@ -51,7 +51,6 @@ export const Element = ({
           </SyntaxHighlighter>
         );
       } else {
-        console.log(children[0].props.text.text);
         // Handle the case where children or children.props.text is undefined
         return (
           <chakra.code

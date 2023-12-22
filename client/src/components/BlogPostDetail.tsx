@@ -6,6 +6,7 @@ import {
   resetDetailPost,
   deleteBlogPostById,
   fetchBlogPosts,
+  fetchTopics,
 } from "../redux/posts/BlogPostReducer";
 import { AppDispatch, useAppSelector } from "../redux/store";
 import { useDispatch } from "react-redux";
@@ -15,22 +16,36 @@ import { OutputData } from "@editorjs/editorjs";
 import { Avatar, Spin, Button, Modal } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { formatDateToMonthDay } from "../utils/clock";
+import EditProfileDetailView from "../pages/Profile/EditProfileDetailView";
 
 const BlogPostDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch: AppDispatch = useDispatch();
   const [editable, setEditable] = useState<boolean>(false);
+  var formattedDateMonthDay = "";
+  const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const [blogContent, setBlogContent] = useState<OutputData | undefined>(
     undefined
   );
-  var formattedDateMonthDay = "";
-  const navigate = useNavigate();
 
+  const { user } = useAppSelector((state) => state.user);
   const { detailPost, isError, isLoading } = useAppSelector(
     (state) => state.blogPost
   );
 
-  const { user } = useAppSelector((state) => state.user);
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleSave = (updatedPost: BlogPost) => {
+    // Handle saving the updated post, update state, etc.
+    setIsEditing(false);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+  };
 
   useEffect(() => {
     const fetchPostDetail = async () => {
@@ -41,10 +56,6 @@ const BlogPostDetail: React.FC = () => {
     if (!detailPost) {
       fetchPostDetail();
     }
-    console.log(
-      "🚀 ~ file: BlogPostDetail.tsx:42 ~ useEffect ~ detailPost:",
-      detailPost
-    );
   }, [dispatch, id, detailPost]);
 
   useEffect(() => {
@@ -66,7 +77,6 @@ const BlogPostDetail: React.FC = () => {
   }, [detailPost]);
 
   useEffect(() => {
-    console.log(user?.pk, " ***** ", detailPost?.user?.id);
     if (
       detailPost?.user?.id === user?.pk &&
       detailPost?.user?.id !== undefined &&
@@ -79,6 +89,7 @@ const BlogPostDetail: React.FC = () => {
   const handleDelete = useCallback(async () => {
     const postId = Number(id);
     await dispatch(deleteBlogPostById(postId));
+    await dispatch(fetchTopics());
     await dispatch(fetchBlogPosts());
     navigate("../feed");
   }, [dispatch, id, navigate]);
@@ -115,6 +126,19 @@ const BlogPostDetail: React.FC = () => {
     );
   }
 
+  if (isEditing) {
+    return (
+      <EditProfileDetailView
+        date={formattedDateMonthDay}
+        detailPost={detailPost}
+        blogContent={blogContent}
+        setBlogContent={setBlogContent}
+        onSave={handleSave}
+        onCancel={handleCancelEdit}
+      />
+    );
+  }
+
   return (
     <div className="container mx-auto my-8 p-4 bg-white shadow-lg rounded-lg">
       <div className="mb-4">
@@ -136,6 +160,7 @@ const BlogPostDetail: React.FC = () => {
                   type="default"
                   shape="round"
                   icon={<EditOutlined />}
+                  onClick={handleEdit}
                   className="mr-2">
                   Edit
                 </Button>

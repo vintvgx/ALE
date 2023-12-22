@@ -35,7 +35,7 @@ const App: React.FC = () => {
     <div className="App">
       <BrowserRouter>
         <div className="flex">
-          {!hideSidebarOnCreatePost && <SidebarView />}
+          <SidebarView />
           <Routes>
             <Route path="/" element={<FeedView />} />
             <Route path="/feed" element={<FeedView />} />
