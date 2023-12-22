@@ -11,10 +11,8 @@ interface EditorTextParserProps {
 }
 
 const EditorTextParser: React.FC<EditorTextParserProps> = ({ data }) => {
-  console.log("🚀 ~ file: EditorTextParser.tsx:14 ~ data:", data);
   // array of html elements
   const html = edjsParser.parse(data);
-  console.log("🚀 ~ file: EditorTextParser.tsx:16 ~ html:", html);
 
   if (data === undefined) {
     // Handle the case where data is undefined

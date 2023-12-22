@@ -4,8 +4,8 @@ import { EDITOR_JS_TOOLS } from "./Tools";
 import "./Editor.css";
 
 interface EditorProps {
-  data: OutputData;
-  setData: React.Dispatch<React.SetStateAction<OutputData>>;
+  data: OutputData | undefined;
+  setData: React.Dispatch<React.SetStateAction<OutputData | undefined>>;
 }
 
 const EditorJSTextBox: FC<EditorProps> = ({ data, setData }) => {
@@ -32,6 +32,7 @@ const EditorJSTextBox: FC<EditorProps> = ({ data, setData }) => {
           holder: "editorjs",
           tools: EDITOR_JS_TOOLS,
           // autofocus: true,
+          data: data ? data : undefined,
           placeholder: "Tell your story...",
           onReady: () => {
             console.log("Editor.js is ready to work!");
@@ -50,10 +51,6 @@ const EditorJSTextBox: FC<EditorProps> = ({ data, setData }) => {
     //   }
     // };
   }, [handleInitialize]);
-
-  useEffect(() => {
-    console.log("BLUR:", data);
-  });
 
   return (
     <>

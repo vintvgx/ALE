@@ -36,6 +36,42 @@ class BlogPost(models.Model):
 
     # Set the upload_to argument to the custom function
     cover = models.ImageField(upload_to=get_cover_upload_path, null=True)
+    
+    def cover_exists(self):
+        """
+        Check if the cover image already exists in S3.
+        """
+        storage = AvatarStorage()
+        cover_path = self.cover.name
+
+        # Check if the file exists in S3
+        return storage.exists(cover_path)
+
+    def save(self, *args, **kwargs):
+        """
+        Override the save method to handle both File and URL scenarios.
+        """
+        if self.cover:
+            if isinstance(self.cover, str) and not self.cover_exists():
+                # If the cover is a URL and doesn't exist in S3, download it
+                # and save as a File
+                image_content = ContentFile(requests.get(self.cover).content)
+                self.cover.save(self.cover.name, image_content, save=False)
+            elif isinstance(self.cover, File) and not self.cover_exists():
+                # If the cover is a File and doesn't exist in S3, upload it
+                super().save(*args, **kwargs)
+
+            # Delete the previous cover image if it has changed
+            if self.pk and self.cover_exists():
+                previous_blog_post = BlogPost.objects.get(pk=self.pk)
+                previous_cover_path = previous_blog_post.cover.name
+
+                # Check if the previous cover exists before attempting deletion
+                if storage.exists(previous_cover_path):
+                    storage.delete(previous_cover_path)
+
+        # Continue with the regular save process
+        super().save(*args, **kwargs)
 
     
 class Comment(models.Model):

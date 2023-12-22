@@ -21,7 +21,7 @@ const CreatePostView = () => {
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
-  const [data, setData] = useState<OutputData>(placeholder);
+  const [data, setData] = useState<OutputData | undefined>(placeholder);
   const [coverImage, setCoverImage] = useState<File | undefined>(undefined);
 
   const { isAuthenticated, user } = useAppSelector((state) => state.user);
@@ -50,11 +50,6 @@ const CreatePostView = () => {
         formData.append("content", JSON.stringify(data));
         formData.append("cover", coverImage || ""); // Ensure it's not null
         formData.append("topic", topic.id.toString());
-
-        console.log(
-          "FormData content from CreateView:",
-          Array.from(formData.entries())
-        );
 
         // Use the updateProgress action to set the initial progress to 0
         dispatch(updateProgress(0));
