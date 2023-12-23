@@ -4,6 +4,7 @@ import {
   ChangePasswordPayload,
   LoginPayload,
   RefreshResponse,
+  UserModel,
 } from "../../models/userModel";
 import axios from "axios";
 
@@ -21,7 +22,7 @@ const authSlice = createSlice({
   reducers: {
     loginSuccess: (
       state,
-      action: PayloadAction<{ access: string; user: any }>
+      action: PayloadAction<{ access: string; user: UserModel }>
     ) => {
       const { access, user } = action.payload;
       localStorage.setItem("access", access);
@@ -48,6 +49,9 @@ const authSlice = createSlice({
     },
     getUserFail: (state) => {
       state.user = null;
+    },
+    setUser: (state, action: PayloadAction<UserModel>) => {
+      state.user = action.payload;
     },
     refreshSuccess: (state, action: PayloadAction<{ access: string }>) => {
       const { access } = action.payload;
@@ -118,6 +122,7 @@ export const {
   verifyFail,
   getUserSuccess,
   getUserFail,
+  setUser,
   refreshSuccess,
   refreshFail,
   changePasswordSuccess,
@@ -157,6 +162,7 @@ export const userLogin = createAsyncThunk(
         config
       );
       dispatch(loginSuccess(res.data)); // Dispatch the loginSuccess action with the data
+      dispatch(fetchUser(res.data.user.pk));
       return res.data; // Resolve the promise with the data if needed
     } catch (err) {
       dispatch(loginFail()); // Dispatch the loginFail action
@@ -221,13 +227,30 @@ export const getUser = createAsyncThunk("user/getUser", async (_, thunkApi) => {
         config
       );
       dispatch(authSlice.actions.getUserSuccess(res.data));
-    } catch (err) {
+      dispatch(fetchUser(res.data.pk));
+    } catch (err: any) {
       dispatch(authSlice.actions.getUserFail());
+      console.error("Failed to fetch user:", err.message);
     }
   } else {
     dispatch(authSlice.actions.guestView());
   }
 });
+
+export const fetchUser = createAsyncThunk(
+  "user/fetch",
+  async (userId: string, thunkApi): Promise<any> => {
+    const { dispatch } = thunkApi;
+
+    try {
+      const res = await axios.get(`http://127.0.0.1:8000/api/users/${userId}`);
+      dispatch(setUser(res.data)); // Dispatch the setUser action with the data
+      return res.data; // Resolve the promise with the data if needed
+    } catch (err) {
+      throw err; // Reject the promise with the error if needed
+    }
+  }
+);
 
 /**
  * Thunk action for refreshing the access token.

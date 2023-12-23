@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { BlogPost, Topic } from "../models/blogPostModel";
 import BlogPostCard from "./BlogPostCard";
-import TopicsSlider from "./TopicsSlider";
+import TopicFadeSlider from "./TopicFadeSlider";
 
 interface Posts {
   blogs: BlogPost[];
@@ -15,17 +15,17 @@ const BlogList: React.FC<Posts> = ({ topics, blogs }) => {
   const filteredBlogs = blogs.filter((blog) => blog.topic.id === selectedTopic);
 
   return (
-    <div className="flex justify-center items-center mx-52 z-0">
-      <div className="flex flex-col items-start mt-44 w-9/12 ">
+    <div className="w-full">
+      <div className="">
         {/* Topic Slider */}
-        <TopicsSlider
+        <TopicFadeSlider
           topics={topics}
           selectedTopic={selectedTopic}
           onTopicSelect={setSelectedTopic}
         />
 
         {/* Display Blogs for Selected Topic */}
-        <div className="w-full p-4">
+        <div className="w-full grid gap-4 sm:grid-cols-2 md:grid-cols-3">
           {filteredBlogs.map((blog) => (
             <BlogPostCard key={blog.title} blog={blog} />
           ))}

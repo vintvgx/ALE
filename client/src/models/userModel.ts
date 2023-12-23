@@ -5,11 +5,11 @@ export interface UserModel {
   username: string;
   first_name: string;
   last_name: string | null;
-  avatar?: string | null; // Assuming avatar is a file path
+  avatar?: string | null;
   is_active?: boolean;
   is_staff?: boolean;
-  date_joined: string; // Use string or Date based on your preference
-  last_login: string; // Use string or Date based on your preference
+  date_joined: string;
+  last_login: string;
 }
 
 export interface AuthState {
