@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../../components/NavBar";
 import BlogList from "../../components/BlogList";
 import { AppDispatch, useAppSelector } from "../../redux/store";
 import { useDispatch } from "react-redux";
@@ -14,10 +13,6 @@ const FeedView = () => {
   const [selectedTopic, setSelectedTopic] = useState(1);
   const { user } = useAppSelector((state) => state.user);
 
-  const filteredBlogs = blogPosts.filter(
-    (blog) => blog.topic.id === selectedTopic
-  );
-
   useEffect(() => {
     const fetchData = async () => {
       await dispatch(fetchTopics());
@@ -30,20 +25,8 @@ const FeedView = () => {
   }, [blogPosts, dispatch, topics]);
 
   return (
-    <div className="w-screen p-4">
-      {/* <TopicFadeSlider
-        topics={topics}
-        selectedTopic={selectedTopic}
-        onTopicSelect={setSelectedTopic}
-      /> */}
-      {/* <div className="w-full p-4">
-        {filteredBlogs.map((blog) => (
-          <BlogPostCard key={blog.title} blog={blog} />
-        ))}
-      </div> */}
-
+    <div className="w-screen h-auto p-4">
       <BlogList blogs={blogPosts} topics={topics} />
-
       <div className="fixed bottom-8 right-8">
         <PlusIcon />
       </div>

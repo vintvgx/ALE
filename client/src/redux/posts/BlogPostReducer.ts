@@ -8,6 +8,7 @@ interface Posts {
   userBlogPosts: BlogPost[];
   detailPost: BlogPost | undefined;
   topics: Topic[];
+  selectedTopic: number | undefined;
   isLoading: boolean;
   isError: string | undefined;
   progress: number;
@@ -18,6 +19,7 @@ const initialState: Posts = {
   userBlogPosts: [],
   detailPost: undefined,
   topics: [],
+  selectedTopic: 1,
   isLoading: false,
   isError: undefined,
   progress: 0,
@@ -45,6 +47,9 @@ const blogSlice = createSlice({
       state.topics = action.payload;
       state.isLoading = false;
       state.isError = undefined;
+    },
+    setSelectedTopic: (state, action: PayloadAction<number | undefined>) => {
+      state.selectedTopic = action.payload;
     },
     getBlogPosts: (state, action: PayloadAction<BlogPost[]>) => {
       state.blogPosts = action.payload;
@@ -98,6 +103,7 @@ export const {
   postsLoading,
   postsError,
   getTopics,
+  setSelectedTopic,
   postBlogPostStart,
   postBlogPostSuccess,
   postBlogPostFailure,

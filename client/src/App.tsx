@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import FeedView from "./pages/Feed/FeedView";
 import LibraryView from "./pages/Library/LibraryView";
@@ -20,13 +20,31 @@ import { useDispatch } from "react-redux";
 import BlogPostDetail from "./components/BlogPostDetail";
 import { Layout } from "antd";
 import { NavBar } from "./components/NavBar/NavBar";
+import { fetchBlogPosts, fetchTopics } from "./redux/posts/BlogPostReducer";
 
 const App: React.FC = () => {
   const hideSidebarOnCreatePost = window.location.pathname === "/create-post";
   const dispatch: AppDispatch = useDispatch();
+  // const location = useLocation();
+  const { topics, blogPosts } = useAppSelector((state) => state.blogPost);
+  const [selectedTopic, setSelectedTopic] = useState(1);
+
   const { user, isAuthenticated, access, refresh, message } = useAppSelector(
     (state) => state.user
   );
+
+  // const isFeedView = location.pathname === "/feed";
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await dispatch(fetchTopics());
+      await dispatch(fetchBlogPosts());
+    };
+
+    if (topics.length === 0 && blogPosts.length === 0) {
+      fetchData();
+    }
+  }, [blogPosts, dispatch, topics]);
 
   useEffect(() => {
     dispatch(verify());
@@ -44,7 +62,7 @@ const App: React.FC = () => {
     <div className="App">
       <BrowserRouter>
         <Layout>
-          <NavBar /> {/* NavBar placed here */}
+          <NavBar showTopicSlider={true} topics={topics} />
           <div className="flex">
             <Routes>
               <Route path="/" element={<FeedView />} />

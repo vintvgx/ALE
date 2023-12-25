@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { BlogPost, Topic } from "../models/blogPostModel";
 import BlogPostCard from "./BlogPostCard";
 import TopicFadeSlider from "./TopicFadeSlider";
+import { useAppSelector } from "../redux/store";
 
 interface Posts {
   blogs: BlogPost[];
@@ -10,20 +11,13 @@ interface Posts {
 }
 
 const BlogList: React.FC<Posts> = ({ topics, blogs }) => {
-  const [selectedTopic, setSelectedTopic] = useState(1);
+  const { selectedTopic } = useAppSelector((state) => state.blogPost);
 
   const filteredBlogs = blogs.filter((blog) => blog.topic.id === selectedTopic);
 
   return (
-    <div className="w-full">
+    <div className="w-full mt-20">
       <div className="">
-        {/* Topic Slider */}
-        <TopicFadeSlider
-          topics={topics}
-          selectedTopic={selectedTopic}
-          onTopicSelect={setSelectedTopic}
-        />
-
         {/* Display Blogs for Selected Topic */}
         <div className="w-full grid gap-4 sm:grid-cols-2 md:grid-cols-3">
           {filteredBlogs.map((blog) => (
