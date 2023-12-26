@@ -44,6 +44,9 @@ export const NavBar: React.FC<NavBarProps> = ({ topics, showTopicSlider }) => {
 
   const userMenu = (
     <Menu>
+      <Menu.Item key="profile" onClick={() => navigate("/profile")}>
+        Profile
+      </Menu.Item>
       <Menu.Item key="settings" onClick={() => navigate("/settings")}>
         Settings
       </Menu.Item>

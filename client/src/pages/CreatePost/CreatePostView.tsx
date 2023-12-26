@@ -147,6 +147,7 @@ const CreatePostView = () => {
         handlePublish={handlePublish}
         handleImageChange={onImageChange}
         coverImage={coverImage}
+        setCoverImage={setCoverImage}
         title={title}
         setTitle={setTitle}
         topics={topics}

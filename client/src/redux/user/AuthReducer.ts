@@ -4,6 +4,7 @@ import {
   ChangePasswordPayload,
   LoginPayload,
   RefreshResponse,
+  SignUpPayload,
   UserModel,
 } from "../../models/userModel";
 import axios from "axios";
@@ -37,6 +38,24 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.user = null;
       state.message = "Login has failed";
+    },
+    signUpSuccess: (
+      state,
+      action: PayloadAction<{ access: string; user: UserModel }>
+    ) => {
+      const { access, user } = action.payload;
+      localStorage.setItem("access", access);
+      state.access = access;
+      state.isAuthenticated = true;
+      state.user = user;
+      state.message = "Sign up has succeeded";
+    },
+    signUpFailure: (state) => {
+      localStorage.removeItem("access");
+      state.access = null;
+      state.isAuthenticated = false;
+      state.user = null;
+      state.message = "Sign up has failed";
     },
     verifySuccess: (state) => {
       state.isAuthenticated = true;
@@ -118,6 +137,8 @@ const authSlice = createSlice({
 export const {
   loginSuccess,
   loginFail,
+  signUpSuccess,
+  signUpFailure,
   verifySuccess,
   verifyFail,
   getUserSuccess,
@@ -167,6 +188,31 @@ export const userLogin = createAsyncThunk(
     } catch (err) {
       dispatch(loginFail()); // Dispatch the loginFail action
       throw err; // Reject the promise with the error if needed
+    }
+  }
+);
+
+export const userSignUp = createAsyncThunk(
+  "user/signup",
+  async (
+    { username, email, password1, password2 }: SignUpPayload,
+    thunkApi
+  ): Promise<any> => {
+    const { dispatch } = thunkApi;
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/dj-rest-auth/registration/",
+        {
+          username,
+          email,
+          password1,
+          password2,
+        }
+      );
+
+      dispatch(signUpSuccess(response.data));
+    } catch (error) {
+      dispatch(signUpFailure());
     }
   }
 );

@@ -25,6 +25,13 @@ export interface LoginPayload {
   password: string;
 }
 
+export interface SignUpPayload {
+  username: string;
+  email: string;
+  password1: string;
+  password2: string;
+}
+
 export interface RefreshResponse {
   access: string;
 }
