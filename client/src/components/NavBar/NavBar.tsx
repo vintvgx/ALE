@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Avatar, Button, Dropdown, Layout, Menu } from "antd";
 import { useDispatch } from "react-redux";
 import { AppDispatch, useAppSelector } from "../../redux/store";
@@ -13,10 +13,10 @@ const { Header } = Layout;
 
 interface NavBarProps {
   topics: Topic[];
-  showTopicSlider: boolean;
+  onPublish: () => void;
 }
 
-export const NavBar: React.FC<NavBarProps> = ({ topics, showTopicSlider }) => {
+export const NavBar: React.FC<NavBarProps> = ({ topics, onPublish }) => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -30,7 +30,6 @@ export const NavBar: React.FC<NavBarProps> = ({ topics, showTopicSlider }) => {
 
   const handleTopicSelect = (topicId: number) => {
     dispatch(setSelectedTopic(topicId));
-    // Any additional logic when a topic is selected
   };
 
   useEffect(() => {
@@ -71,11 +70,7 @@ export const NavBar: React.FC<NavBarProps> = ({ topics, showTopicSlider }) => {
   );
 
   const PublishButton = () => (
-    <Button
-      type="primary"
-      onClick={() => {
-        /* logic to handle publish */
-      }}>
+    <Button type="primary" onClick={onPublish}>
       Publish
     </Button>
   );

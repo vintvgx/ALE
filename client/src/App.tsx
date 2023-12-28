@@ -28,13 +28,11 @@ const App: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   // const location = useLocation();
   const { topics, blogPosts } = useAppSelector((state) => state.blogPost);
-  const [selectedTopic, setSelectedTopic] = useState(1);
+  const [isCreateModalVisible, setCreateModalVisible] = useState(false);
 
-  const { user, isAuthenticated, access, refresh, message } = useAppSelector(
-    (state) => state.user
-  );
-
-  // const isFeedView = location.pathname === "/feed";
+  const handleShowModal = () => {
+    setCreateModalVisible(true);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,7 +55,7 @@ const App: React.FC = () => {
     <div className="App">
       <BrowserRouter>
         <Layout>
-          <NavBar showTopicSlider={true} topics={topics} />
+          <NavBar topics={topics} onPublish={handleShowModal} />{" "}
           <div className="flex">
             <Routes>
               <Route path="/" element={<FeedView />} />
@@ -66,7 +64,16 @@ const App: React.FC = () => {
               <Route path="/settings" element={<SettingsView />} />
               <Route path="/messenger" element={<MessengerView />} />
               <Route path="/profile" element={<ProfileView />} />
-              <Route path="/create-post" element={<CreatePostView />} />
+              <Route
+                path="/create-post"
+                element={
+                  <CreatePostView
+                    isModalVisible={isCreateModalVisible}
+                    setIsModalVisible={setCreateModalVisible}
+                  />
+                }
+              />
+
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/login" element={<Login />} />
               <Route path="/change-password" element={<ChangePassword />} />

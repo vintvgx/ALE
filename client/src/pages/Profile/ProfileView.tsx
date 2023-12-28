@@ -5,7 +5,6 @@ import { AppDispatch, useAppSelector } from "../../redux/store";
 import { fetchUserBlogPosts } from "../../redux/posts/BlogPostReducer";
 import { Topic } from "../../models/blogPostModel";
 import ProfileBlogList from "../../components/ProfileBlogList";
-import TopicsSlider from "../../components/TopicsSlider";
 import { Avatar } from "antd";
 import { Navigate } from "react-router-dom";
 
