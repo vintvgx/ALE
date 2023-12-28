@@ -78,9 +78,9 @@ const BlogPostDetail: React.FC = () => {
 
   useEffect(() => {
     if (
-      detailPost?.user?.id === user?.pk &&
+      detailPost?.user?.id === user?.id &&
       detailPost?.user?.id !== undefined &&
-      user?.pk !== undefined
+      user?.id !== undefined
     ) {
       setEditable(true);
     }
@@ -140,61 +140,95 @@ const BlogPostDetail: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto my-8 p-4 bg-white shadow-lg rounded-lg">
-      <div className="mb-4">
+    <div className="container mx-auto my-8 p-4 bg-white shadow-lg mt-40 rounded-lg">
+      <div className="flex flex-row justify-center items-center mt-10 text-md">
+        <span>{formattedDateMonthDay}</span>
+        <span className="text-lg mx-4">•</span>
+        <span>
+          Written By {detailPost?.user?.first_name}{" "}
+          {detailPost?.user?.last_name}
+        </span>
+      </div>
+      <div className="flex flex-row justify-center items-center mt-10 text-6xl font-medium">
+        <span>{detailPost?.title}</span>
+      </div>
+      <div className="flex flex-row justify-center items-center mt-20">
         <img
           src={detailPost.cover?.toString() || ""} // assuming detailPost has a cover property
           alt={detailPost.title}
-          className="w-full h-80 object-cover rounded-lg mb-4"
+          className=" w-6/12 h-auto object-cover rounded-lg mb-4"
         />
-
-        <div className="mb-4 flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold mb-4">{detailPost.title}</h1>
-            <p className="text-gray-500 mb-2">
-              Published on {formattedDateMonthDay}
-            </p>
-            {editable && (
-              <div className="flex mb-4">
-                <Button
-                  type="default"
-                  shape="round"
-                  icon={<EditOutlined />}
-                  onClick={handleEdit}
-                  className="mr-2">
-                  Edit
-                </Button>
-                <Button
-                  type="default"
-                  shape="round"
-                  icon={<DeleteOutlined />}
-                  onClick={showDeleteConfirmation}>
-                  Delete
-                </Button>
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col items-center">
-            <Avatar
-              size={40}
-              src={detailPost.user?.avatar} // assuming detailPost has a user property
-              alt={detailPost.user?.username}
-            />
-            <span className="ml-2 text-sm">{detailPost.user?.username}</span>
-          </div>
-        </div>
       </div>
-      <div className="prose max-w-full w-full min-h-screen">
-        {blogContent ? (
-          <EditorTextParser data={blogContent} />
-        ) : (
-          <div className="flex items-center justify-center h-48">
-            <Spin size="large" />
-          </div>
-        )}
+      <div className="flex justify-center mt-20">
+        <div className="self-center items-center w-6/12 min-h-screen">
+          {blogContent ? (
+            <EditorTextParser data={blogContent} />
+          ) : (
+            <div className="flex items-center justify-center h-48">
+              <Spin size="large" />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
+
+  // return (
+  //   <div className="container mx-auto my-8 p-4 bg-white shadow-lg rounded-lg">
+  //     <div className="mb-4">
+  // <img
+  //   src={detailPost.cover?.toString() || ""} // assuming detailPost has a cover property
+  //   alt={detailPost.title}
+  //   className="w-full h-80 object-cover rounded-lg mb-4"
+  // />
+
+  //       <div className="mb-4 flex justify-between items-center">
+  //         <div>
+  //           <h1 className="text-3xl font-bold mb-4">{detailPost.title}</h1>
+  //           <p className="text-gray-500 mb-2">
+  //             Published on {formattedDateMonthDay}
+  //           </p>
+  //           {editable && (
+  //             <div className="flex mb-4">
+  //               <Button
+  //                 type="default"
+  //                 shape="round"
+  //                 icon={<EditOutlined />}
+  //                 onClick={handleEdit}
+  //                 className="mr-2">
+  //                 Edit
+  //               </Button>
+  //               <Button
+  //                 type="default"
+  //                 shape="round"
+  //                 icon={<DeleteOutlined />}
+  //                 onClick={showDeleteConfirmation}>
+  //                 Delete
+  //               </Button>
+  //             </div>
+  //           )}
+  //         </div>
+  //         <div className="flex flex-col items-center">
+  //           <Avatar
+  //             size={40}
+  //             src={detailPost.user?.avatar} // assuming detailPost has a user property
+  //             alt={detailPost.user?.username}
+  //           />
+  //           <span className="ml-2 text-sm">{detailPost.user?.username}</span>
+  //         </div>
+  //       </div>
+  //     </div>
+  //     <div className="prose max-w-full w-full min-h-screen">
+  //       {blogContent ? (
+  //         <EditorTextParser data={blogContent} />
+  //       ) : (
+  //         <div className="flex items-center justify-center h-48">
+  //           <Spin size="large" />
+  //         </div>
+  //       )}
+  //     </div>
+  //   </div>
+  // );
 };
 
 export default BlogPostDetail;

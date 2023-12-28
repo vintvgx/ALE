@@ -1,15 +1,76 @@
-h1 {
-    font-size: 5rem;
-}
+/* Base spacing unit */
+:root {
+    --spacing-unit: 1rem; /* Adjust this to scale all spacings */
+    --link-color: #007bff; /* Standard blue color for links */
+  --link-hover-color: #0056b3; /* Darker blue color for link hover state */
+  }
+  
+  h1,
+  h2,
+  h3,
+  p {
+    margin-bottom: var(--spacing-unit);
+    line-height: 1.4;
+  }
+  
+  h1 {
+    font-size: 2.5rem; /* 40px */
+    font-weight: 700; /* bold */
+    margin-top: 0;
+    margin-bottom: calc(2 * var(--spacing-unit)); /* double space after h1 */
+  }
+  
+  h2 {
+    font-size: 2rem; /* 32px */
+    font-weight: 600; /* semi-bold */
+    margin-top: calc(1.5 * var(--spacing-unit)); /* 1.5 spacing unit above h2 */
+    margin-bottom: calc(1.5 * var(--spacing-unit)); /* 1.5 spacing unit below h2 */
+  }
+  
+  h3 {
+    font-size: 1.75rem; /* 28px */
+    font-weight: 500; /* medium */
+    margin-top: calc(1.25 * var(--spacing-unit)); /* slightly more space above h3 */
+    margin-bottom: calc(1.25 * var(--spacing-unit)); /* slightly more space below h3 */
+  }
+  
+  p {
+    font-size: 1rem; /* 16px */
+    font-weight: 400; /* normal */
+    margin-top: 0;
+    margin-bottom: var(--spacing-unit); /* standard space after paragraphs */
+  }
 
-h2 {
-    font-size: 3rem;
-}
 
-h3 {
-    font-size: 2rem;
-}
-
-p {
-    font-size: 1rem;
-}
+  
+  /* Adjustments for smaller screens */
+  @media screen and (max-width: 768px) {
+    h1 {
+      font-size: 2rem; /* 32px */
+      margin-bottom: calc(1.5 * var(--spacing-unit));
+    }
+  
+    h2 {
+      font-size: 1.5rem; /* 24px */
+      margin-top: calc(1.25 * var(--spacing-unit));
+      margin-bottom: calc(1.25 * var(--spacing-unit));
+    }
+  
+    h3 {
+      font-size: 1.25rem; /* 20px */
+      margin-top: var(--spacing-unit);
+      margin-bottom: var(--spacing-unit);
+    }
+  
+    /* Paragraphs can generally stay the same size, as 1rem is readable on most devices */
+  }
+  
+  /* Ensure that the last element doesn't have a bottom margin to avoid excessive spacing at the end of sections */
+  h1:last-child,
+  h2:last-child,
+  h3:last-child,
+  p:last-child {
+    margin-bottom: 0;
+  }
+  
+  

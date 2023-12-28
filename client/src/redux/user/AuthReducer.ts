@@ -4,14 +4,19 @@ import {
   ChangePasswordPayload,
   LoginPayload,
   RefreshResponse,
+  SignUpPayload,
+  UserModel,
 } from "../../models/userModel";
 import axios from "axios";
+import EmailVerification from "../../pages/Auth/AwaitVerification";
 
 const initialState: AuthState = {
   access: localStorage.getItem("access"),
   refresh: localStorage.getItem("refresh"),
   isAuthenticated: false,
   user: null,
+  usernames: null,
+  emails: null,
   message: "",
 };
 
@@ -21,7 +26,7 @@ const authSlice = createSlice({
   reducers: {
     loginSuccess: (
       state,
-      action: PayloadAction<{ access: string; user: any }>
+      action: PayloadAction<{ access: string; user: UserModel }>
     ) => {
       const { access, user } = action.payload;
       localStorage.setItem("access", access);
@@ -30,12 +35,30 @@ const authSlice = createSlice({
       state.user = user;
       state.message = "Login has succeeded";
     },
-    loginFail: (state) => {
+    loginFail: (state, action: PayloadAction<string>) => {
       localStorage.removeItem("access");
       state.access = null;
       state.isAuthenticated = false;
       state.user = null;
-      state.message = "Login has failed";
+      state.message = action.payload;
+    },
+    signUpSuccess: (
+      state,
+      action: PayloadAction<{ access: string; user: UserModel }>
+    ) => {
+      const { access, user } = action.payload;
+      localStorage.setItem("access", access);
+      state.access = access;
+      state.isAuthenticated = true;
+      state.user = user;
+      state.message = "Sign up has succeeded";
+    },
+    signUpFailure: (state) => {
+      localStorage.removeItem("access");
+      state.access = null;
+      state.isAuthenticated = false;
+      state.user = null;
+      state.message = "Sign up has failed";
     },
     verifySuccess: (state) => {
       state.isAuthenticated = true;
@@ -48,6 +71,19 @@ const authSlice = createSlice({
     },
     getUserFail: (state) => {
       state.user = null;
+    },
+    setUser: (state, action: PayloadAction<UserModel>) => {
+      state.user = action.payload;
+    },
+    fetchUsersSuccess: (
+      state,
+      action: PayloadAction<{ usernames: []; emails: [] }>
+    ) => {
+      state.usernames = action.payload.usernames;
+      state.emails = action.payload.emails;
+    },
+    fetchUsersFail: (state) => {
+      state.message = "Failed to fetch users";
     },
     refreshSuccess: (state, action: PayloadAction<{ access: string }>) => {
       const { access } = action.payload;
@@ -114,10 +150,15 @@ const authSlice = createSlice({
 export const {
   loginSuccess,
   loginFail,
+  signUpSuccess,
+  signUpFailure,
   verifySuccess,
   verifyFail,
   getUserSuccess,
   getUserFail,
+  setUser,
+  fetchUsersSuccess,
+  fetchUsersFail,
   refreshSuccess,
   refreshFail,
   changePasswordSuccess,
@@ -157,10 +198,72 @@ export const userLogin = createAsyncThunk(
         config
       );
       dispatch(loginSuccess(res.data)); // Dispatch the loginSuccess action with the data
+      dispatch(fetchUser(res.data.user.pk));
       return res.data; // Resolve the promise with the data if needed
-    } catch (err) {
-      dispatch(loginFail()); // Dispatch the loginFail action
-      throw err; // Reject the promise with the error if needed
+    } catch (error: any) {
+      let errorMessage = "An error occurred. Please try again.";
+      if (
+        error?.response &&
+        error?.response.data.non_field_errors.includes(
+          "E-mail is not verified."
+        )
+      ) {
+        errorMessage = "Awaiting Email Verification";
+      }
+      dispatch(loginFail(errorMessage));
+    }
+  }
+);
+
+export const userSignUp = createAsyncThunk(
+  "user/signup",
+  async (
+    { username, email, password1, password2 }: SignUpPayload,
+    thunkApi
+  ): Promise<any> => {
+    const { dispatch } = thunkApi;
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/dj-rest-auth/registration/",
+        {
+          username,
+          email,
+          password1,
+          password2,
+        }
+      );
+
+      dispatch(signUpSuccess(response.data));
+    } catch (error) {
+      dispatch(signUpFailure());
+    }
+  }
+);
+
+export const emailVerification = createAsyncThunk(
+  "user/verify_email",
+  async (key: string | undefined, thunkApi): Promise<any> => {
+    const { dispatch } = thunkApi;
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const body = JSON.stringify({ key });
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/dj-rest-auth/registration/verify-email/",
+        body,
+        config
+      );
+      console.log(response);
+
+      dispatch(activateAccountSuccess());
+    } catch (error) {
+      dispatch(activateAccountFail());
     }
   }
 );
@@ -221,13 +324,30 @@ export const getUser = createAsyncThunk("user/getUser", async (_, thunkApi) => {
         config
       );
       dispatch(authSlice.actions.getUserSuccess(res.data));
-    } catch (err) {
+      dispatch(fetchUser(res.data.pk));
+    } catch (err: any) {
       dispatch(authSlice.actions.getUserFail());
+      console.error("Failed to fetch user:", err.message);
     }
   } else {
     dispatch(authSlice.actions.guestView());
   }
 });
+
+export const fetchUser = createAsyncThunk(
+  "user/fetch",
+  async (userId: string, thunkApi): Promise<any> => {
+    const { dispatch } = thunkApi;
+
+    try {
+      const res = await axios.get(`http://127.0.0.1:8000/api/users/${userId}`);
+      dispatch(setUser(res.data)); // Dispatch the setUser action with the data
+      return res.data; // Resolve the promise with the data if needed
+    } catch (err) {
+      throw err; // Reject the promise with the error if needed
+    }
+  }
+);
 
 /**
  * Thunk action for refreshing the access token.
@@ -326,6 +446,23 @@ export const userLogout = createAsyncThunk(
     } catch (err) {
       // Dispatch the logout action upon failure
       dispatch(logout());
+    }
+  }
+);
+
+export const fetchUsers = createAsyncThunk(
+  "user/fetchUsers",
+  async (_, thunkApi): Promise<any> => {
+    const { dispatch } = thunkApi;
+
+    try {
+      const response = await axios.get("http://localhost:8000/api/users/");
+      const usernames = response.data.map((user: UserModel) => user.username);
+      const emails = response.data.map((user: UserModel) => user.email);
+
+      dispatch(fetchUsersSuccess({ usernames, emails }));
+    } catch (error) {
+      dispatch(fetchUsersFail());
     }
   }
 );

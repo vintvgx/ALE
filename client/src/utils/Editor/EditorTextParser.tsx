@@ -19,7 +19,7 @@ const EditorTextParser: React.FC<EditorTextParserProps> = ({ data }) => {
     return <div>No content to display</div>;
   }
 
-  return <div className="text-container w-4/5">{parse(html.join(""))}</div>;
+  return <div className="text-container w-full ">{parse(html.join(""))}</div>;
 };
 
 export default EditorTextParser;

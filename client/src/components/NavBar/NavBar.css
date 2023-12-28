@@ -1,0 +1,31 @@
+/* NavBar.css */
+
+/* Override styles for all menu items */
+.ant-menu-item {
+  background-color: transparent !important;
+}
+
+/* Override styles for selected and hovered menu item */
+.ant-menu-item-selected,
+.ant-menu-item:hover,
+.custom-menu .ant-menu-item-selected,
+.custom-menu .ant-menu-item-selected a {
+  color: rgb(154, 154, 154) !important;
+  border-bottom: none !important;
+  background-color: transparent !important;
+}
+
+/* Override styles for ::after and ::before pseudo-elements */
+.ant-menu-item-selected::after,
+.ant-menu-item-selected::before,
+.ant-menu-item:hover::after,
+.ant-menu-item:hover::before {
+  border: transparent !important;
+  content: none;
+  border-bottom: transparent !important;
+}
+
+/* Additional styles for focused or active states if needed */
+.ant-menu-item:focus, .ant-menu-item:active {
+  background-color: transparent !important;
+}

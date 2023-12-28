@@ -1,19 +1,49 @@
-import React from "react";
+import { useState } from "react";
+import { useParams, Navigate } from "react-router-dom";
+import { emailVerification } from "../../redux/user/AuthReducer";
+import { AppDispatch } from "../../redux/store";
+import { useDispatch } from "react-redux";
 
 const EmailVerification = () => {
+  const { key } = useParams();
+  const dispatch: AppDispatch = useDispatch();
+
+  const [status, setStatus] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    console.log(key);
+
+    try {
+      dispatch(emailVerification(key));
+      setStatus(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  if (status) {
+    return <Navigate to="/login" />;
+  }
+
   return (
-    <div className="flex flex-col items-center mt-24 h-screen w-screen">
-      <div className="bg-white p-8 rounded-md shadow-md">
-        <h2 className="text-2xl font-bold mb-4">Email Verification</h2>
-        <p className="text-gray-600">
-          Thank you for signing up! We've sent a verification email to your
-          email address. Please check your inbox and click on the verification
-          link to activate your account.
-        </p>
-        <p className="mt-4 text-gray-600">
-          If you haven't received the email, please check your spam folder.
-        </p>
-      </div>
+    <div className="flex flex-col mt-60 h-screen w-screen">
+      <h2 className="mb-4 text-3xl font-bold text-center text-gray-700">
+        Activate Account
+      </h2>
+      <h5 className="mb-4 text-center text-gray-500">
+        Click the button below to activate your account
+      </h5>
+      <form className="mb-3" onSubmit={handleSubmit}>
+        <div className="grid mt-5 justify-center self-center gap-2">
+          <button
+            className="px-6 py-2 font-bold text-white bg-gray-900 rounded hover:bg-slate-500"
+            type="submit">
+            Activate
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
