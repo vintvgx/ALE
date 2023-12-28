@@ -14,7 +14,7 @@ import {
 } from "../../redux/posts/BlogPostReducer";
 import { UserModel } from "../../models/userModel";
 import { Topic } from "../../models/blogPostModel";
-import CreateModal from "../../components/CreateModal";
+import CreateModal from "../../components/ProfileBlogList/CreateModal";
 
 interface CreatePostTypes {
   isModalVisible: boolean;

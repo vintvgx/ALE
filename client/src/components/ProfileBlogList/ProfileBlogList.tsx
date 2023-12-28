@@ -1,9 +1,9 @@
 // ProfileBlogList.jsx
 import React, { useState } from "react";
 import TopicsSlider from "./TopicsSlider";
-import BlogPostCard from "./BlogPostCard";
-import { Topic } from "../models/blogPostModel";
-import { BlogPost } from "../models/blogPostModel";
+import BlogPostCard from "../BlogList/BlogPostCard";
+import { Topic } from "../../models/blogPostModel";
+import { BlogPost } from "../../models/blogPostModel";
 
 interface ProfileBlogListProps {
   topics: Topic[];

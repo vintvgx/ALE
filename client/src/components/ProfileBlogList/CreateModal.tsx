@@ -1,8 +1,8 @@
 import React, { ChangeEvent, useRef } from "react";
 import { Modal, Row, Col, Input, Button, Image } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
-import { Topic } from "../models/blogPostModel";
-import { UserModel } from "../models/userModel";
+import { Topic } from "../../models/blogPostModel";
+import { UserModel } from "../../models/userModel";
 
 interface CreateModalProps {
   isModalVisible: boolean;

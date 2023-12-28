@@ -1,22 +1,20 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { BlogPost } from "../models/blogPostModel";
+import { BlogPost } from "../../models/blogPostModel";
 import {
   fetchBlogPostById,
   resetDetailPost,
   deleteBlogPostById,
   fetchBlogPosts,
   fetchTopics,
-} from "../redux/posts/BlogPostReducer";
-import { AppDispatch, useAppSelector } from "../redux/store";
+} from "../../redux/posts/BlogPostReducer";
+import { AppDispatch, useAppSelector } from "../../redux/store";
 import { useDispatch } from "react-redux";
-import EditorJS from "@editorjs/editorjs";
-import EditorTextParser from "../utils/Editor/EditorTextParser";
+import EditorTextParser from "../../utils/Editor/EditorTextParser";
 import { OutputData } from "@editorjs/editorjs";
-import { Avatar, Spin, Button, Modal } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { formatDateToMonthDay } from "../utils/clock";
-import EditProfileDetailView from "../pages/Profile/EditProfileDetailView";
+import { Spin, Modal } from "antd";
+import { formatDateToMonthDay } from "../../utils/clock";
+import EditProfileDetailView from "../../pages/Profile/EditProfileDetailView";
 
 const BlogPostDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,9 +28,7 @@ const BlogPostDetail: React.FC = () => {
   );
 
   const { user } = useAppSelector((state) => state.user);
-  const { detailPost, isError, isLoading } = useAppSelector(
-    (state) => state.blogPost
-  );
+  const { detailPost, isLoading } = useAppSelector((state) => state.blogPost);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -172,63 +168,6 @@ const BlogPostDetail: React.FC = () => {
       </div>
     </div>
   );
-
-  // return (
-  //   <div className="container mx-auto my-8 p-4 bg-white shadow-lg rounded-lg">
-  //     <div className="mb-4">
-  // <img
-  //   src={detailPost.cover?.toString() || ""} // assuming detailPost has a cover property
-  //   alt={detailPost.title}
-  //   className="w-full h-80 object-cover rounded-lg mb-4"
-  // />
-
-  //       <div className="mb-4 flex justify-between items-center">
-  //         <div>
-  //           <h1 className="text-3xl font-bold mb-4">{detailPost.title}</h1>
-  //           <p className="text-gray-500 mb-2">
-  //             Published on {formattedDateMonthDay}
-  //           </p>
-  //           {editable && (
-  //             <div className="flex mb-4">
-  //               <Button
-  //                 type="default"
-  //                 shape="round"
-  //                 icon={<EditOutlined />}
-  //                 onClick={handleEdit}
-  //                 className="mr-2">
-  //                 Edit
-  //               </Button>
-  //               <Button
-  //                 type="default"
-  //                 shape="round"
-  //                 icon={<DeleteOutlined />}
-  //                 onClick={showDeleteConfirmation}>
-  //                 Delete
-  //               </Button>
-  //             </div>
-  //           )}
-  //         </div>
-  //         <div className="flex flex-col items-center">
-  //           <Avatar
-  //             size={40}
-  //             src={detailPost.user?.avatar} // assuming detailPost has a user property
-  //             alt={detailPost.user?.username}
-  //           />
-  //           <span className="ml-2 text-sm">{detailPost.user?.username}</span>
-  //         </div>
-  //       </div>
-  //     </div>
-  //     <div className="prose max-w-full w-full min-h-screen">
-  //       {blogContent ? (
-  //         <EditorTextParser data={blogContent} />
-  //       ) : (
-  //         <div className="flex items-center justify-center h-48">
-  //           <Spin size="large" />
-  //         </div>
-  //       )}
-  //     </div>
-  //   </div>
-  // );
 };
 
 export default BlogPostDetail;

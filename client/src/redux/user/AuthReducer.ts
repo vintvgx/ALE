@@ -8,7 +8,6 @@ import {
   UserModel,
 } from "../../models/userModel";
 import axios from "axios";
-import EmailVerification from "../../pages/Auth/AwaitVerification";
 
 const initialState: AuthState = {
   access: localStorage.getItem("access"),

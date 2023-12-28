@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "./NavBar.css";
 import { userLogout } from "../../redux/user/AuthReducer";
 import { Topic } from "../../models/blogPostModel";
-import TopicFadeSlider from "../TopicFadeSlider";
+import TopicFadeSlider from "../BlogList/TopicFadeSlider";
 import { setSelectedTopic } from "../../redux/posts/BlogPostReducer";
 import { useLocation } from "react-router-dom";
 const { Header } = Layout;

@@ -1,7 +1,3 @@
-import React, { useState } from "react";
-import { emailVerification } from "../../redux/user/AuthReducer";
-import { useNavigate, useParams } from "react-router-dom";
-
 const AwaitVerification = () => {
   return (
     <div className="flex flex-col items-center mt-24 h-screen w-screen">
