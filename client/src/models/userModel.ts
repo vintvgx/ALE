@@ -17,6 +17,8 @@ export interface AuthState {
   refresh: string | null;
   isAuthenticated: boolean;
   user: UserModel | null;
+  usernames: string[] | null;
+  emails: string[] | null;
   message: string;
 }
 

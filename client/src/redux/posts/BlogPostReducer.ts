@@ -161,9 +161,6 @@ export const postBlogPost =
     try {
       dispatch(postBlogPostStart());
 
-      formData.append("user", user.pk?.toString() ?? "");
-      // formData.append("topic", topicString);
-
       console.log(
         "FormData content from Reducer:",
         Array.from(formData.entries())

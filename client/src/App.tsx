@@ -8,6 +8,7 @@ import ProfileView from "./pages/Profile/ProfileView";
 import CreatePostView from "./pages/CreatePost/CreatePostView";
 import SidebarView from "./components/SidebarView";
 import "react-loading-skeleton/dist/skeleton.css";
+import AwaitVerification from "./pages/Auth/AwaitVerification";
 import EmailVerification from "./pages/Auth/EmailVerification";
 import ResetPasswordConfirm from "./pages/Auth/ResetPasswordConfirm";
 import SignUp from "./pages/Auth/SignUp";
@@ -77,7 +78,9 @@ const App: React.FC = () => {
               <Route path="/change-password" element={<ChangePassword />} />
               <Route
                 path="dj-rest-auth/registration/account-confirm-email/:key/"
-                Component={EmailVerification}></Route>
+                Component={EmailVerification}
+              />
+              <Route path="/await-verification" Component={AwaitVerification} />
               <Route
                 path="reset/password/confirm/:uid/:token"
                 Component={ResetPasswordConfirm}></Route>

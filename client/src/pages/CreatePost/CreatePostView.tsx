@@ -62,17 +62,14 @@ const CreatePostView = () => {
       return;
     }
 
-    if (user) {
+    if (user && user.id) {
       try {
-        const topic: Topic = { id: 1, name: "Option" };
-
         const formData = new FormData();
         formData.append("title", title);
         formData.append("content", JSON.stringify(data));
-        formData.append("cover", coverImage || ""); // Ensure it's not null
-        formData.append("topic", topic.id.toString());
-
-        // Use the updateProgress action to set the initial progress to 0
+        formData.append("cover", coverImage || "");
+        formData.append("topic", selectedTopic?.id?.toString() || "2");
+        formData.append("user", user?.id?.toString());
         dispatch(updateProgress(0));
 
         await dispatch(postBlogPost(formData, user as UserModel));
