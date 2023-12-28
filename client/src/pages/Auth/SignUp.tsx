@@ -88,6 +88,8 @@ const SignUp = () => {
         email,
         password1: password,
         password2: confirmPassword,
+        first_name: firstName,
+        last_name: lastName,
       };
 
       try {

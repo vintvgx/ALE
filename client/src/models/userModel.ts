@@ -32,6 +32,8 @@ export interface SignUpPayload {
   email: string;
   password1: string;
   password2: string;
+  first_name: string;
+  last_name: string | null;
 }
 
 export interface RefreshResponse {

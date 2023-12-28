@@ -13,7 +13,14 @@ interface Posts {
 const BlogList: React.FC<Posts> = ({ topics, blogs }) => {
   const { selectedTopic } = useAppSelector((state) => state.blogPost);
 
-  const filteredBlogs = blogs.filter((blog) => blog.topic.id === selectedTopic);
+  var filteredBlogs = blogs.filter((blog) => blog.topic.id === selectedTopic);
+
+  // Sort blogs by the created_at date in descending order (latest first)
+  filteredBlogs = filteredBlogs.sort((a, b) => {
+    const dateA = new Date(a.created_at || "");
+    const dateB = new Date(b.created_at || "");
+    return dateB.getTime() - dateA.getTime(); // Latest first
+  });
 
   return (
     <div className="w-full mt-20">

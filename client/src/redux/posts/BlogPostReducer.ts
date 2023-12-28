@@ -89,6 +89,9 @@ const blogSlice = createSlice({
       state.isLoading = false;
       state.isError = undefined;
     },
+    resetUserBlogPosts: (state: Posts) => {
+      state.userBlogPosts = [];
+    },
     updateProgress: (state, action: PayloadAction<number>) => {
       state.progress = action.payload;
     },
@@ -112,6 +115,7 @@ export const {
   getBlogPostByIdFailure,
   getBlogPostById,
   getUserBlogPosts,
+  resetUserBlogPosts,
   updateProgress,
   resetDetailPost,
 } = blogSlice.actions;

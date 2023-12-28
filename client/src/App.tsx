@@ -53,12 +53,6 @@ const App: React.FC = () => {
     // dispatch(fetchUser(user?.pk?.toString() || ""));
   }, [dispatch]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      console.log("🚀 ~ file: App.tsx:28 ~ user:", user);
-    }
-  });
-
   return (
     <div className="App">
       <BrowserRouter>

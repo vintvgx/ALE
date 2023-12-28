@@ -1,5 +1,6 @@
 
 
+from datetime import timedelta
 from pathlib import Path
 from decouple import config
 import os
@@ -15,7 +16,7 @@ env = environ.Env(
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Take environment variables from .env file
-environ.Env.read_env(os.path.join(BASE_DIR, '.env')) 
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -40,19 +41,19 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "comm",
-     # corsheader
+    # corsheader
     "corsheaders",
-	# rest-framework
+    # rest-framework
     'rest_framework',
     'rest_framework.authtoken',
-	# dj-rest-auth
-	'dj_rest_auth.registration',
+    # dj-rest-auth
+    'dj_rest_auth.registration',
     'dj_rest_auth',
-	# allauth
+    # allauth
     'django.contrib.sites',
     'allauth',
     'allauth.account',
-	# allauth social accounts
+    # allauth social accounts
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     # local app
@@ -67,9 +68,8 @@ REST_FRAMEWORK = {
 }
 
 # simple jwt
-from datetime import timedelta
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30), #
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(hours=2),
 }
 
@@ -126,7 +126,7 @@ WSGI_APPLICATION = "server.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-MYSQL_PASSWORD=env('DB_PASSWORD')
+MYSQL_PASSWORD = env('DB_PASSWORD')
 
 
 DATABASES = {
@@ -184,11 +184,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 STORAGES = {
-    #media file (image) management
+    # media file (image) management
     "default": {
         "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
     },
-    
+
     # css and json management
     "staticfiles": {
         "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
@@ -196,25 +196,26 @@ STORAGES = {
 }
 
 
-AWS_S3_ACCESS_KEY_ID=env('AWS_ACCESS_KEY')
-AWS_S3_SECRET_ACCESS_KEY=env('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME=env('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_REGION_NAME=env('AWS_S3_REGION_NAME')
+AWS_S3_ACCESS_KEY_ID = env('AWS_ACCESS_KEY')
+AWS_S3_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME')
 AWS_QUERYSTRING_EXPIRE = 600
 
 # AWS_S3_CUSTOM_DOMAIN="https://d2t1gk8m0oqna0.cloudfront.net"
 
 
-#todo Resolve private key error / create RSA key with public key + private key access
+# todo Resolve private key error / create RSA key with public key + private key access
 # AWS_CLOUDFRONT_KEY_ID=env.str("AWS_CLOUDFRONT_KEY_ID").strip()
 # AWS_CLOUDFRONT_KEY=env.str("AWS_CLOUDFRONT_KEY", multiline=True).encode('ascii').strip()
 
 
 # allauth
 SITE_ID = 1
-ACCOUNT_USER_MODEL_USERNAME_FIELD = "username"  # Set the username field for Allauth
+# Set the username field for Allauth
+ACCOUNT_USER_MODEL_USERNAME_FIELD = "username"
 ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_EMAIL_REQUIRED = True # using email as authenticaiton
+ACCOUNT_EMAIL_REQUIRED = True  # using email as authenticaiton
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 

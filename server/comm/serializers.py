@@ -10,25 +10,30 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
 
+
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = '__all__'
-        
+
+
 class TopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
         fields = ["id"]
-        
+
+
 class TopicCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
         fields = ['id']
 
+
 class TopicListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
         fields = '__all__'
+
 
 class BlogPostListSerializer(serializers.ModelSerializer):
     topic = TopicListSerializer()
@@ -37,10 +42,13 @@ class BlogPostListSerializer(serializers.ModelSerializer):
     class Meta:
         model = BlogPost
         fields = '__all__'
-        
+
+
 class BlogPostSerializer(serializers.ModelSerializer):
-    topic = serializers.PrimaryKeyRelatedField(queryset=Topic.objects.all())  # Use PrimaryKeyRelatedField to expect an ID
-    author = UserSerializer(read_only=True)  # Mark the author field as read-only
+    # Use PrimaryKeyRelatedField to expect an ID
+    topic = serializers.PrimaryKeyRelatedField(queryset=Topic.objects.all())
+    # Mark the author field as read-only
+    author = UserSerializer(read_only=True)
 
     class Meta:
         model = BlogPost
@@ -58,19 +66,23 @@ class BlogPostSerializer(serializers.ModelSerializer):
         topic_instance = validated_data.pop('topic')
 
         # Create the BlogPost instance with the topic and author set
-        blog_post = BlogPost.objects.create( topic=topic_instance, **validated_data)
+        blog_post = BlogPost.objects.create(
+            topic=topic_instance, **validated_data)
 
         return blog_post
+
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = '__all__'
 
+
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = '__all__'
+
 
 class FollowSerializer(serializers.ModelSerializer):
     class Meta:

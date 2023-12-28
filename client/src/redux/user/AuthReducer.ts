@@ -218,10 +218,24 @@ export const userLogin = createAsyncThunk(
 export const userSignUp = createAsyncThunk(
   "user/signup",
   async (
-    { username, email, password1, password2 }: SignUpPayload,
+    {
+      username,
+      email,
+      password1,
+      password2,
+      first_name,
+      last_name,
+    }: SignUpPayload,
     thunkApi
   ): Promise<any> => {
     const { dispatch } = thunkApi;
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
     try {
       const response = await axios.post(
         "http://localhost:8000/dj-rest-auth/registration/",
@@ -231,6 +245,22 @@ export const userSignUp = createAsyncThunk(
           password1,
           password2,
         }
+      );
+
+      // Fetch the user ID using the username or email
+      const userResponse = await axios.get(
+        `http://127.0.0.1:8000/api/users/find/${username}`
+      );
+      const userId = userResponse.data.id;
+
+      // Update the user's first name and last name
+      await axios.patch(
+        `http://127.0.0.1:8000/api/users/${userId}/`,
+        {
+          first_name,
+          last_name,
+        },
+        config
       );
 
       dispatch(signUpSuccess(response.data));
@@ -294,6 +324,7 @@ export const verify = createAsyncThunk("user/verify", async (_, thunkApi) => {
     } catch (err) {
       dispatch(authSlice.actions.verifyFail());
       //refresh token if verify fails
+      console.log("Verify failed, Refresh!");
       await dispatch(refresh());
     }
   } else {
@@ -363,21 +394,23 @@ export const refresh = createAsyncThunk<
   const { dispatch } = thunkApi;
 
   if (localStorage.getItem("access")) {
+    console.log("Access token found. Dispatching Refresh");
     const config = {
       headers: {
         "Content-Type": "application/json",
       },
     };
-    const body = JSON.stringify({ refresh: localStorage.getItem("refresh") });
+
     try {
       const res = await axios.post(
         "http://localhost:8000/dj-rest-auth/token/refresh/",
-        body,
-        config
+        { withCredentials: true }
       );
       dispatch(refreshSuccess(res.data));
+      console.log("REFRESH SUCCESS:", res.data);
       return res.data;
     } catch (error) {
+      console.log("REFRESH FAIL");
       return dispatch(refreshFail());
     }
   } else {

@@ -21,14 +21,14 @@ const ProfileBlogList: React.FC<Posts> = ({ topics, blogs }) => {
   const [selectedTopic, setSelectedTopic] = useState(1);
 
   return (
-    <div className="flex justify-center items-center mx-52 z-0">
-      <div className="flex flex-col items-start mt-44 w-9/12 ">
+    <div className="flex z-0">
+      <div className="flex flex-col w-9/12 ">
         <TopicsSlider
           topics={topics}
           selectedTopic={selectedTopic}
           onTopicSelect={setSelectedTopic}
         />
-        <div className="w-full p-4">
+        <div className="w-1/3 p-4">
           {selectedTopic === 1 && (
             <>
               {blogs.map((blogPost) => (
