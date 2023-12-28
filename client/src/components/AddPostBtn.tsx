@@ -3,12 +3,15 @@ import React from "react";
 import { FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Icon that navigates the user to CreatePostView
+ */
 const PlusIcon = () => {
   const navigate = useNavigate();
 
   const handleIconClick = () => {
     // Navigate to CreatePostView
-    navigate("/create-post"); // Replace "CreatePostView" with the actual screen name
+    navigate("/create-post");
   };
 
   return (

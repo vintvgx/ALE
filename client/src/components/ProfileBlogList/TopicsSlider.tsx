@@ -1,6 +1,6 @@
 // TopicsSlider.jsx
 import React from "react";
-import { Topic } from "../models/blogPostModel";
+import { Topic } from "../../models/blogPostModel";
 
 interface TopicsSliderProps {
   topics: Topic[];

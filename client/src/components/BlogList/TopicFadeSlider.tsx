@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Topic } from "../models/blogPostModel";
+import { Topic } from "../../models/blogPostModel";
 
 interface TopicsSliderProps {
   topics: Topic[];

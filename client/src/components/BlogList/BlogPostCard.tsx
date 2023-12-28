@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { BlogPost } from "../models/blogPostModel";
-import { formatDateToMMDDYY } from "../utils/clock";
+import { BlogPost } from "../../models/blogPostModel";
+import { formatDateToMMDDYY } from "../../utils/clock";
 
 interface BlogPostCardProps {
   blog: BlogPost;
 }
 
+/**
+ * Displays the blog post in card form
+ */
 const BlogPostCard: React.FC<BlogPostCardProps> = ({ blog }) => {
   var formattedDateMonthDay = "";
 

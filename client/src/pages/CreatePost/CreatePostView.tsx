@@ -1,5 +1,4 @@
-import React, { useState, ChangeEvent } from "react";
-import { Modal, Row, Col, Input, Button } from "antd";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import Editor from "../../utils/Editor/Editor";
 import { OutputData } from "@editorjs/editorjs";
 import { placeholder } from "../../utils/Editor/ExampleData";
@@ -14,11 +13,18 @@ import {
   updateProgress, // Import the updateProgress action
 } from "../../redux/posts/BlogPostReducer";
 import { UserModel } from "../../models/userModel";
-import { Image } from "antd";
 import { Topic } from "../../models/blogPostModel";
-import CreateModal from "../../components/CreateModal";
+import CreateModal from "../../components/ProfileBlogList/CreateModal";
 
-const CreatePostView = () => {
+interface CreatePostTypes {
+  isModalVisible: boolean;
+  setIsModalVisible: (visible: boolean) => void;
+}
+
+const CreatePostView: React.FC<CreatePostTypes> = ({
+  isModalVisible,
+  setIsModalVisible,
+}) => {
   const dispatch: AppDispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -29,7 +35,7 @@ const CreatePostView = () => {
   );
 
   const [coverImage, setCoverImage] = useState<File | undefined>(undefined);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  // const [isModalVisible, setIsModalVisible] = useState(false);
 
   const { isAuthenticated, user } = useAppSelector((state) => state.user);
   const { isLoading, isError, progress, topics } = useAppSelector(
@@ -50,11 +56,11 @@ const CreatePostView = () => {
     setIsModalVisible(false);
   };
 
-  const handleSubmit = async () => {
-    // existing validation and dispatch logic...
-
-    showModal();
-  };
+  useEffect(() => {
+    if (isModalVisible) {
+      showModal();
+    }
+  }, [isModalVisible]);
 
   const handlePublish = async () => {
     if (!title || !data) {
@@ -104,14 +110,7 @@ const CreatePostView = () => {
         />
       </div> */}
 
-      <div className="flex justify-end m-4 mt-20">
-        <button
-          onClick={handleSubmit}
-          className="bg-white text-purple-600 font-bold py-2 px-4 rounded-full">
-          SUBMIT
-        </button>
-      </div>
-      <div className="flex flex-col justify-center w-2/4 m-auto bg-white p-8 rounded-lg shadow-lg mb-10">
+      <div className="flex mt-20 flex-col justify-center w-2/4 m-auto bg-white p-8 rounded-lg shadow-lg mb-10">
         <input
           type="text"
           value={title}
@@ -119,23 +118,6 @@ const CreatePostView = () => {
           placeholder="Title"
           className="text-4xl font-semibold mb-4 p-2 rounded focus:outline-none"
         />
-        {/* <label htmlFor="imageInput" className="mb-2 text-lg font-semibold">
-          Choose a Cover Image:
-        </label> */}
-        {/* <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          id="imageInput"
-          className="mb-4"
-        />
-        {coverImage && (
-          <Image
-            src={URL.createObjectURL(coverImage)}
-            alt="Cover"
-            className=" max-w-full h-auto rounded"
-          />
-        )} */}
         <Editor data={data} setData={setData} />
       </div>
       <CreateModal

@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BlogPost } from "../../models/blogPostModel";
-import BlogPostDetail from "../../components/BlogPostDetail";
+import BlogPostDetail from "../../components/BlogList/BlogPostDetail";
 import { Avatar, Button, Spin } from "antd";
 import Editor from "../../utils/Editor/Editor";
 import { OutputData } from "@editorjs/editorjs";

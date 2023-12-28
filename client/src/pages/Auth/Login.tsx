@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { AppDispatch, useAppSelector } from "../../redux/store";
@@ -10,9 +10,7 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const { user, message, isAuthenticated } = useAppSelector(
-    (state) => state.user
-  );
+  const { message, isAuthenticated } = useAppSelector((state) => state.user);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();

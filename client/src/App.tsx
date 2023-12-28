@@ -6,7 +6,6 @@ import SettingsView from "./pages/Settings/SettingsView";
 import MessengerView from "./pages/Messenger/MessengerView";
 import ProfileView from "./pages/Profile/ProfileView";
 import CreatePostView from "./pages/CreatePost/CreatePostView";
-import SidebarView from "./components/SidebarView";
 import "react-loading-skeleton/dist/skeleton.css";
 import AwaitVerification from "./pages/Auth/AwaitVerification";
 import EmailVerification from "./pages/Auth/EmailVerification";
@@ -18,7 +17,7 @@ import ChangePassword from "./pages/Auth/ChangePassword";
 import { fetchUser, getUser, verify } from "./redux/user/AuthReducer";
 import { AppDispatch, useAppSelector } from "./redux/store";
 import { useDispatch } from "react-redux";
-import BlogPostDetail from "./components/BlogPostDetail";
+import BlogPostDetail from "./components/BlogList/BlogPostDetail";
 import { Layout } from "antd";
 import { NavBar } from "./components/NavBar/NavBar";
 import { fetchBlogPosts, fetchTopics } from "./redux/posts/BlogPostReducer";
@@ -28,13 +27,11 @@ const App: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   // const location = useLocation();
   const { topics, blogPosts } = useAppSelector((state) => state.blogPost);
-  const [selectedTopic, setSelectedTopic] = useState(1);
+  const [isCreateModalVisible, setCreateModalVisible] = useState(false);
 
-  const { user, isAuthenticated, access, refresh, message } = useAppSelector(
-    (state) => state.user
-  );
-
-  // const isFeedView = location.pathname === "/feed";
+  const handleShowModal = () => {
+    setCreateModalVisible(true);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,17 +50,11 @@ const App: React.FC = () => {
     // dispatch(fetchUser(user?.pk?.toString() || ""));
   }, [dispatch]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      console.log("🚀 ~ file: App.tsx:28 ~ user:", user);
-    }
-  });
-
   return (
     <div className="App">
       <BrowserRouter>
         <Layout>
-          <NavBar showTopicSlider={true} topics={topics} />
+          <NavBar topics={topics} onPublish={handleShowModal} />{" "}
           <div className="flex">
             <Routes>
               <Route path="/" element={<FeedView />} />
@@ -72,7 +63,16 @@ const App: React.FC = () => {
               <Route path="/settings" element={<SettingsView />} />
               <Route path="/messenger" element={<MessengerView />} />
               <Route path="/profile" element={<ProfileView />} />
-              <Route path="/create-post" element={<CreatePostView />} />
+              <Route
+                path="/create-post"
+                element={
+                  <CreatePostView
+                    isModalVisible={isCreateModalVisible}
+                    setIsModalVisible={setCreateModalVisible}
+                  />
+                }
+              />
+
               <Route path="/sign-up" element={<SignUp />} />
               <Route path="/login" element={<Login />} />
               <Route path="/change-password" element={<ChangePassword />} />

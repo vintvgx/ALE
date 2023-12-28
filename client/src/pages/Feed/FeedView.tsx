@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import BlogList from "../../components/BlogList";
+import BlogList from "../../components/BlogList/BlogList";
 import { AppDispatch, useAppSelector } from "../../redux/store";
 import { useDispatch } from "react-redux";
 import PlusIcon from "../../components/AddPostBtn";
 import { fetchBlogPosts, fetchTopics } from "../../redux/posts/BlogPostReducer";
-import TopicFadeSlider from "../../components/TopicFadeSlider";
-import BlogPostCard from "../../components/BlogPostCard";
+import TopicFadeSlider from "../../components/BlogList/TopicFadeSlider";
+import BlogPostCard from "../../components/BlogList/BlogPostCard";
 
 const FeedView = () => {
   const dispatch: AppDispatch = useDispatch();

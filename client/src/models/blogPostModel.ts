@@ -16,11 +16,11 @@ export interface BlogContent {
 
 export interface BlogPost {
   id: number;
-  user: UserModel | undefined; //TODO change in models.py author -> user
+  user: UserModel | undefined;
   topic: Topic;
   title: string;
   content: string;
-  created_at?: string | undefined; //TODO change in models.py created_at -> published
+  created_at?: string | undefined;
   cover?: File | string | null;
 }
 

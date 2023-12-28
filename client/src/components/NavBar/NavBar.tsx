@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Avatar, Button, Dropdown, Layout, Menu } from "antd";
 import { useDispatch } from "react-redux";
 import { AppDispatch, useAppSelector } from "../../redux/store";
@@ -6,17 +6,17 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "./NavBar.css";
 import { userLogout } from "../../redux/user/AuthReducer";
 import { Topic } from "../../models/blogPostModel";
-import TopicFadeSlider from "../TopicFadeSlider";
+import TopicFadeSlider from "../BlogList/TopicFadeSlider";
 import { setSelectedTopic } from "../../redux/posts/BlogPostReducer";
 import { useLocation } from "react-router-dom";
 const { Header } = Layout;
 
 interface NavBarProps {
   topics: Topic[];
-  showTopicSlider: boolean;
+  onPublish: () => void;
 }
 
-export const NavBar: React.FC<NavBarProps> = ({ topics, showTopicSlider }) => {
+export const NavBar: React.FC<NavBarProps> = ({ topics, onPublish }) => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -30,7 +30,6 @@ export const NavBar: React.FC<NavBarProps> = ({ topics, showTopicSlider }) => {
 
   const handleTopicSelect = (topicId: number) => {
     dispatch(setSelectedTopic(topicId));
-    // Any additional logic when a topic is selected
   };
 
   useEffect(() => {
@@ -39,8 +38,13 @@ export const NavBar: React.FC<NavBarProps> = ({ topics, showTopicSlider }) => {
     } else {
       setShowTopic(true);
     }
-    console.log("🚀 ~ file: NavBar.tsx:15 ~ user:", user);
   }, [isFeedView, user]);
+
+  const getUserInitials = (firstName: string, lastName: string | null) => {
+    return `${firstName?.charAt(0).toUpperCase()}${lastName
+      ?.charAt(0)
+      .toUpperCase()}`;
+  };
 
   const userMenu = (
     <Menu>
@@ -66,11 +70,7 @@ export const NavBar: React.FC<NavBarProps> = ({ topics, showTopicSlider }) => {
   );
 
   const PublishButton = () => (
-    <Button
-      type="primary"
-      onClick={() => {
-        /* logic to handle publish */
-      }}>
+    <Button type="primary" onClick={onPublish}>
       Publish
     </Button>
   );
@@ -96,7 +96,7 @@ export const NavBar: React.FC<NavBarProps> = ({ topics, showTopicSlider }) => {
         mode="horizontal"
         className="bg-transparent outline-none border-0 no-underline-menu ant-menu-item-selected custom-menu" // Updated class name
         defaultSelectedKeys={["2"]}>
-        {isAuthenticated ? (
+        {user && isAuthenticated ? (
           isCreatePostView ? (
             <div>
               <PublishButton />
@@ -105,7 +105,15 @@ export const NavBar: React.FC<NavBarProps> = ({ topics, showTopicSlider }) => {
                 overlay={userMenu}
                 trigger={["click"]}>
                 <Menu.Item key="avatar">
-                  <Avatar src={user?.avatar} />
+                  {user?.avatar ? (
+                    <Avatar src={user.avatar} />
+                  ) : (
+                    <Avatar>
+                      <span className=" text-xl text-black z-1">
+                        {getUserInitials(user.first_name, user?.last_name)}
+                      </span>
+                    </Avatar>
+                  )}
                 </Menu.Item>
               </Dropdown>
             </div>
@@ -126,7 +134,15 @@ export const NavBar: React.FC<NavBarProps> = ({ topics, showTopicSlider }) => {
 
               <Dropdown overlay={userMenu} trigger={["click"]}>
                 <Menu.Item key="avatar">
-                  <Avatar src={user?.avatar} />
+                  {user?.avatar ? (
+                    <Avatar src={user.avatar} />
+                  ) : (
+                    <Avatar>
+                      <span className=" text-md text-white ">
+                        {getUserInitials(user.first_name, user?.last_name)}
+                      </span>
+                    </Avatar>
+                  )}
                 </Menu.Item>
               </Dropdown>
             </div>
