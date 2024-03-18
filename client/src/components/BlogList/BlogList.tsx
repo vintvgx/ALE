@@ -2,12 +2,15 @@
 import React, { useState } from "react";
 import { BlogPost, Topic } from "../../models/blogPostModel";
 import BlogPostCard from "./BlogPostCard";
+import Masonry from "react-masonry-css";
 import TopicFadeSlider from "./TopicFadeSlider";
 import { useAppSelector } from "../../redux/store";
+import "./BlogList.css";
 
 interface Posts {
   blogs: BlogPost[];
   topics: Topic[];
+  isLoading: boolean;
 }
 
 /**
@@ -15,7 +18,7 @@ interface Posts {
  *
  * Sorted by topic & latest date
  */
-const BlogList: React.FC<Posts> = ({ topics, blogs }) => {
+const BlogList: React.FC<Posts> = ({ topics, blogs, isLoading }) => {
   const { selectedTopic } = useAppSelector((state) => state.blogPost);
 
   var filteredBlogs = blogs.filter((blog) => blog.topic.id === selectedTopic);
@@ -27,15 +30,22 @@ const BlogList: React.FC<Posts> = ({ topics, blogs }) => {
     return dateB.getTime() - dateA.getTime(); // Latest first
   });
 
+  const breakpointColumnsObj = {
+    default: 3,
+    1100: 2,
+    700: 1,
+  };
+
   return (
     <div className="w-full mt-20">
-      <div className="">
-        <div className="w-full grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-          {filteredBlogs.map((blog) => (
-            <BlogPostCard key={blog.title} blog={blog} />
-          ))}
-        </div>
-      </div>
+      <Masonry
+        breakpointCols={breakpointColumnsObj}
+        className="masonry-grid"
+        columnClassName="masonry-grid_column">
+        {filteredBlogs.map((blog) => (
+          <BlogPostCard key={blog.title} blog={blog} isLoading={isLoading} />
+        ))}
+      </Masonry>
     </div>
   );
 };

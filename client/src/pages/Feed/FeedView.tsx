@@ -9,7 +9,9 @@ import BlogPostCard from "../../components/BlogList/BlogPostCard";
 
 const FeedView = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { topics, blogPosts } = useAppSelector((state) => state.blogPost);
+  const { topics, blogPosts, isLoading } = useAppSelector(
+    (state) => state.blogPost
+  );
   const [selectedTopic, setSelectedTopic] = useState(1);
   const { user } = useAppSelector((state) => state.user);
 
@@ -28,7 +30,7 @@ const FeedView = () => {
     <div
       className="w-screen h-auto p-4 flex"
       style={{ backgroundColor: "#f5f5f5" }}>
-      <BlogList blogs={blogPosts} topics={topics} />
+      <BlogList blogs={blogPosts} topics={topics} isLoading={isLoading} />
       <div className="fixed bottom-8 right-8">
         <PlusIcon />
       </div>

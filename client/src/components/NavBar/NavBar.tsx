@@ -82,7 +82,7 @@ export const NavBar: React.FC<NavBarProps> = ({ topics, onPublish }) => {
         className="text-black text-xl self-center cursor-pointer">
         NOD/UM
       </span>
-      <div className=" justify-center self-center flex ">
+      <div className=" justify-center self-center   ">
         {showTopic && (
           <TopicFadeSlider
             topics={topics}
