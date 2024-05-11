@@ -102,7 +102,6 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:3001",
-    "https://aletheia-5c7905ea51aa.herokuapp.com/"
 ]
 CORS_ALLOW_CREDENTIALS = True
 
