@@ -125,7 +125,9 @@ export default blogSlice.reducer;
 export const fetchBlogPosts = () => async (dispatch: any) => {
   try {
     dispatch(postsLoading(true));
-    const res = await axios.get("http://127.0.0.1:8000/api/blogposts/");
+    const res = await axios.get(
+      "https://aletheia-5c7905ea51aa.herokuapp.com/api/blogposts/"
+    );
 
     const blogListData = res.data;
     dispatch(getBlogPosts(blogListData));
@@ -137,7 +139,9 @@ export const fetchBlogPosts = () => async (dispatch: any) => {
 export const fetchTopics = () => async (dispatch: any) => {
   try {
     dispatch(postsLoading(true));
-    const res = await axios.get("http://127.0.0.1:8000/api/topics/");
+    const res = await axios.get(
+      "https://aletheia-5c7905ea51aa.herokuapp.com/api/topics/"
+    );
     const topicsData = res.data;
     dispatch(getTopics(topicsData));
   } catch (error) {
@@ -150,7 +154,7 @@ export const fetchUserBlogPosts =
     try {
       dispatch(postsLoading(true));
       const res = await axios.get(
-        `http://127.0.0.1:8000/api/blogposts/user/${userId}`
+        `https://aletheia-5c7905ea51aa.herokuapp.com/api/blogposts/user/${userId}`
       );
       const userBlogPostsData = res.data;
       dispatch(getUserBlogPosts(userBlogPostsData));
@@ -171,17 +175,21 @@ export const postBlogPost =
       );
 
       await axios
-        .post("http://127.0.0.1:8000/api/blogposts/", formData, {
-          onUploadProgress: (progressEvent) => {
-            let percentCompleted = progressEvent.total
-              ? Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              : 0;
-            dispatch(updateProgress(percentCompleted));
-          },
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
+        .post(
+          "https://aletheia-5c7905ea51aa.herokuapp.com/api/blogposts/",
+          formData,
+          {
+            onUploadProgress: (progressEvent) => {
+              let percentCompleted = progressEvent.total
+                ? Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                : 0;
+              dispatch(updateProgress(percentCompleted));
+            },
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        )
         .then((res) => {
           console.log(res.data);
         })
@@ -204,7 +212,7 @@ export const fetchBlogPostById = (postId: number) => async (dispatch: any) => {
   try {
     dispatch(getBlogPostByIdStart());
     const res = await axios.get(
-      `http://127.0.0.1:8000/api/blogposts/${postId}/`
+      `https://aletheia-5c7905ea51aa.herokuapp.com/api/blogposts/${postId}/`
     );
     const blogPostData: BlogPost = res.data;
     dispatch(getBlogPostById(blogPostData));
@@ -215,7 +223,9 @@ export const fetchBlogPostById = (postId: number) => async (dispatch: any) => {
 
 export const deleteBlogPostById = (postId: number) => async (dispatch: any) => {
   try {
-    await axios.delete(`http://127.0.0.1:8000/api/blogposts/${postId}/`);
+    await axios.delete(
+      `https://aletheia-5c7905ea51aa.herokuapp.com/api/blogposts/${postId}/`
+    );
     console.log(`Blog post with ID ${postId} deleted successfully.`);
     // You can dispatch an action here if needed
   } catch (error) {
@@ -247,7 +257,7 @@ export const updateBlogPost =
       }
 
       await axios.put(
-        `http://127.0.0.1:8000/api/blogposts/${postUpdate.id}/`,
+        `https://aletheia-5c7905ea51aa.herokuapp.com/api/blogposts/${postUpdate.id}/`,
         formData,
         {
           headers: {
