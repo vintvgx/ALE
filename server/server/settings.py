@@ -4,6 +4,7 @@ from datetime import timedelta
 from pathlib import Path
 from decouple import config
 import os
+import dj_database_url
 import environ
 
 env = environ.Env(
@@ -131,17 +132,12 @@ WSGI_APPLICATION = "server.wsgi.application"
 MYSQL_PASSWORD = env('DB_PASSWORD')
 
 
+# Database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'comm_db',
-        'USER': 'root',
-        'PASSWORD': MYSQL_PASSWORD,
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
-    }
+    'default': dj_database_url.config(
+        default='mysql://bf8dcc9f2c5ad4:8b0c8365@us-cluster-east-01.k8s.cleardb.net/heroku_09edf888fd01591?reconnect=true'
+    )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
