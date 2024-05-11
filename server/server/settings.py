@@ -28,7 +28,8 @@ SECRET_KEY = "django-insecure-_%0qfn(5&1(n3an2#-nm5_p90uk=96s5zck6-d037077%s-$bs
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["https://aletheia-5c7905ea51aa.herokuapp.com/",
+                 '127.0.0.1', 'localhost:8000', '*']
 
 
 # Application definition
@@ -100,6 +101,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:3001",
+    "https://aletheia-5c7905ea51aa.herokuapp.com/"
 ]
 CORS_ALLOW_CREDENTIALS = True
 
