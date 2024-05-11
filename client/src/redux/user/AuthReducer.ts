@@ -192,7 +192,7 @@ export const userLogin = createAsyncThunk(
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/dj-rest-auth/login/",
+        "https://aletheia-5c7905ea51aa.herokuapp.com/dj-rest-auth/login/",
         body,
         config
       );
@@ -237,7 +237,7 @@ export const userSignUp = createAsyncThunk(
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/dj-rest-auth/registration/",
+        "https://aletheia-5c7905ea51aa.herokuapp.com/dj-rest-auth/registration/",
         {
           username,
           email,
@@ -248,13 +248,13 @@ export const userSignUp = createAsyncThunk(
 
       // Fetch the user ID using the username or email
       const userResponse = await axios.get(
-        `http://127.0.0.1:8000/api/users/find/${username}`
+        `https://aletheia-5c7905ea51aa.herokuapp.com/api/users/find/${username}`
       );
       const userId = userResponse.data.id;
 
       // Update the user's first name and last name
       await axios.patch(
-        `http://127.0.0.1:8000/api/users/${userId}/`,
+        `https://aletheia-5c7905ea51aa.herokuapp.com/api/users/${userId}/`,
         {
           first_name,
           last_name,
@@ -284,7 +284,7 @@ export const emailVerification = createAsyncThunk(
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/dj-rest-auth/registration/verify-email/",
+        "https://aletheia-5c7905ea51aa.herokuapp.com/dj-rest-auth/registration/verify-email/",
         body,
         config
       );
@@ -315,7 +315,7 @@ export const verify = createAsyncThunk("user/verify", async (_, thunkApi) => {
 
     try {
       await axios.post(
-        "http://localhost:8000/dj-rest-auth/token/verify/",
+        "https://aletheia-5c7905ea51aa.herokuapp.com/dj-rest-auth/token/verify/",
         body,
         config
       );
@@ -350,7 +350,7 @@ export const getUser = createAsyncThunk("user/getUser", async (_, thunkApi) => {
 
     try {
       const res = await axios.get(
-        "http://localhost:8000/dj-rest-auth/user/",
+        "https://aletheia-5c7905ea51aa.herokuapp.com/dj-rest-auth/user/",
         config
       );
       dispatch(authSlice.actions.getUserSuccess(res.data));
@@ -370,7 +370,9 @@ export const fetchUser = createAsyncThunk(
     const { dispatch } = thunkApi;
 
     try {
-      const res = await axios.get(`http://127.0.0.1:8000/api/users/${userId}`);
+      const res = await axios.get(
+        `https://aletheia-5c7905ea51aa.herokuapp.com/api/users/${userId}`
+      );
       dispatch(setUser(res.data)); // Dispatch the setUser action with the data
       return res.data; // Resolve the promise with the data if needed
     } catch (err) {
@@ -402,7 +404,7 @@ export const refresh = createAsyncThunk<
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/dj-rest-auth/token/refresh/",
+        "https://aletheia-5c7905ea51aa.herokuapp.com/dj-rest-auth/token/refresh/",
         { withCredentials: true }
       );
       dispatch(refreshSuccess(res.data));
@@ -439,7 +441,7 @@ export const changePassword = createAsyncThunk(
     try {
       // Make a request to change the password
       await axios.post(
-        "http://localhost:8000/dj-rest-auth/password/change/",
+        "https://aletheia-5c7905ea51aa.herokuapp.com/dj-rest-auth/password/change/",
         body,
         config
       );
@@ -471,7 +473,10 @@ export const userLogout = createAsyncThunk(
 
     try {
       // Make a request to logout
-      await axios.post("http://localhost:8000/dj-rest-auth/logout/", config);
+      await axios.post(
+        "https://aletheia-5c7905ea51aa.herokuapp.com/dj-rest-auth/logout/",
+        config
+      );
 
       // Dispatch the logout action upon success
       dispatch(logout());
@@ -488,7 +493,9 @@ export const fetchUsers = createAsyncThunk(
     const { dispatch } = thunkApi;
 
     try {
-      const response = await axios.get("http://localhost:8000/api/users/");
+      const response = await axios.get(
+        "https://aletheia-5c7905ea51aa.herokuapp.com/api/users/"
+      );
       const usernames = response.data.map((user: UserModel) => user.username);
       const emails = response.data.map((user: UserModel) => user.email);
 
