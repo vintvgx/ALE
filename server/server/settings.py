@@ -134,10 +134,15 @@ MYSQL_PASSWORD = env('DB_PASSWORD')
 # Database
 DATABASES = {
     'default': dj_database_url.config(
-        default='mysql://bf8dcc9f2c5ad4:8b0c8365@us-cluster-east-01.k8s.cleardb.net/heroku_09edf888fd01591'
+        default='mysql://bf8dcc9f2c5ad4:8b0c8365@us-cluster-east-01.k8s.cleardb.net/heroku_09edf888fd01591',
     )
 }
 
+DATABASE_POOL_ARGS = {
+    'max_overflow': 10,
+    'pool_size': 5,
+    'recycle': 300,
+}
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
