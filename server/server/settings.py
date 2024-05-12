@@ -135,6 +135,7 @@ MYSQL_PASSWORD = env('DB_PASSWORD')
 DATABASES = {
     'default': dj_database_url.config(
         default='mysql://bf8dcc9f2c5ad4:8b0c8365@us-cluster-east-01.k8s.cleardb.net/heroku_09edf888fd01591',
+        conn_max_age=0,
     )
 }
 
