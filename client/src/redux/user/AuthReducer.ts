@@ -209,6 +209,7 @@ export const userLogin = createAsyncThunk(
       ) {
         errorMessage = "Awaiting Email Verification";
       }
+      console.log(error);
       dispatch(loginFail(errorMessage));
     }
   }
