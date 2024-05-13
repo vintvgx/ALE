@@ -78,13 +78,19 @@ const CreatePostView: React.FC<CreatePostTypes> = ({
         formData.append("user", user?.id?.toString());
         dispatch(updateProgress(0));
 
-        await dispatch(postBlogPost(formData, user as UserModel));
-        setTitle("");
-        setData(placeholder);
-        setCoverImage(undefined);
-        await dispatch(fetchTopics());
-        await dispatch(fetchBlogPosts());
-        navigate("../feed");
+        console.log(JSON.stringify(data));
+
+        formData.forEach((value, key) => {
+          console.log(`${key}: ${value}`);
+        });
+
+        // await dispatch(postBlogPost(formData, user as UserModel));
+        // setTitle("");
+        // setData(placeholder);
+        // setCoverImage(undefined);
+        // await dispatch(fetchTopics());
+        // await dispatch(fetchBlogPosts());
+        // navigate("../feed");
       } catch (error) {
         alert("Error submitting post. Please try again.");
         console.error("Error submitting post:", error);
