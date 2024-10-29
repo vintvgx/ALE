@@ -36,40 +36,10 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-exports.generateStockBlogPost = functions.https.onCall(
-  async (data, context) => {
-    try {
-      const response = await openai.createCompletion({
-        model: "gpt-3.5-turbo",
-        prompt: stock_blog_post_prompt,
-        max_tokens: 1000,
-        temperature: 0.7,
-      });
-      console.log("OpenAI response:", response.data.choices[0].text);
-      return { content: response.data.choices[0].text };
-    } catch (error) {
-      console.error("OpenAI error:", error);
-      throw new functions.https.HttpsError(
-        "internal",
-        "Failed to generate blog post",
-        error.message
-      );
-    }
-  }
-);
-
 // Specify the topic you want to publish to
 const resultTopic = pubSubClient.topic("return_publish_stock_post");
 
 exports.generateGCLOUDStockBlogPost = (message, context) => {
-  // const data = message.data
-  //   ? Buffer.from(message.data, "base64").toString()
-  //   : "{}";
-  // const parsedData = JSON.parse(data); // Ensure your message data is properly parsed
-
-  // const prompt =
-  //   parsedData.prompt || "Default prompt if not specified in message";
-
   const messages = [{ role: "system", content: stock_blog_post_prompt }];
 
   console.log(messages);
